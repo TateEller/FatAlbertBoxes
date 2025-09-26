@@ -1,8 +1,8 @@
 public class Box
 {
-    private float width = 0.0f, height = 0.0f, strokeWidth = 2.0f;
+    private float width = 0.0f, height = 0.0f;
     private String engraving, font;
-    private final float MinumumSize = 25.0f; // Debug value for size constraint
+    private final float MinumumSize = 25.0f, strokeWidth = 2.0f; // Debug values
 
     public Box(float width, float height, String engraving, String font)
     {
@@ -26,11 +26,6 @@ public class Box
         if(height < MinumumSize)
             throw new IllegalArgumentException("Height must be at least " + MinumumSize);
         this.height = height;
-    }
-
-    public void setStrokeWidth(float strokeWidth)
-    {
-        this.strokeWidth = strokeWidth;
     }
 
     public void setEngraving(String engraving)
