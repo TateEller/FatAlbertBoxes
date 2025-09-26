@@ -12,7 +12,7 @@ Created by:
 * Cooper Stannard
 
 ## Features
-* **Customizable Dimenstions:** Specify the exact width, height, and depth of the box.
+* **Customizable Dimensions:** Specify the exact width, height, and depth of the box.
 * **Text Engraving** Add initials to a specific side of the box.
 * **Font Selection** Choose the font for the engraving.
 * **Tab count adjustment** Specify the exact amount of connecting tabs (within certain constraints).
