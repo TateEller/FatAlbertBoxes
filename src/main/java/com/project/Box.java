@@ -1,3 +1,4 @@
+package com.project;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class Box
             """, width, height, strokeWidth, xCenter, yCenter, engraving);
         //add the variables with %f (for floats), %s (for strings)
         String svgWhole = svgOpener + svgContent + svgCloser;
-        File file = new File("readyToPrint/example.svg");
+        File file = new File("exports/example.svg");
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(svgWhole);
             System.out.println("SVG file created: example.svg");
