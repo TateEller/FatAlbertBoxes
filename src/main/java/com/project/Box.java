@@ -9,6 +9,14 @@ public class Box
     private String engraving, font;
     private final float MinumumSize = 25.0f, strokeWidth = 2.0f; // Debug values
 
+    //create two variables to track the position of every piece we add
+    private float positionX = 10;
+    private float positionY = 10;
+    //create a variable to track the pieces created
+    private int pieces = 0;
+    //create a variable for the space between the pieces
+    private int spaceBetween = 10;
+
     public Box(float width, float height, String engraving, String font)
     {
         if(width < MinumumSize || height < MinumumSize)
@@ -50,23 +58,29 @@ public class Box
 
     public void print()
     {
+        //create a variable for padding
+        float padding = 10;
+        //create a variable for the file_width and file_height
+        float file_width = width*3 + 2*spaceBetween + 2*padding; //space_between is for the space between the pieces and
+        float file_height = height*2 + spaceBetween + 2*padding;
         //break the string down
         String svgOpener = String.format("""
-            <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">
-            """);
+            <svg xmlns="http://www.w3.org/2000/svg" width="%f" height="%f">
+            """, file_width, file_height);
         String svgCloser = """
             </svg>
             """;
-
-        //look for the center of the box
-        float xCenter = 10 + width / 2;
-        float yCenter = 10 + height / 2;
-
-        String svgContent = String.format("""
-            <rect x="10" y="10" width="%.1f" height="%.1f" fill="lightblue" stroke="navy" stroke-width="%.1f"/>
-            <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
-            """, width, height, strokeWidth, xCenter, yCenter, engraving);
-        //add the variables with %f (for floats), %s (for strings)
+        String svgContent = "";
+        //we need to add one base
+        svgContent += addBase();
+        //we need to add four sides
+        svgContent += addSide1();
+        svgContent += addSide1();
+        svgContent += addSide2();
+        svgContent += addSide2();
+        //we need to add the top
+        svgContent += addTop();
+        //creating the svg file
         String svgWhole = svgOpener + svgContent + svgCloser;
         File file = new File("exports/example.svg");
         try (FileWriter writer = new FileWriter(file)) {
@@ -79,24 +93,97 @@ public class Box
 
     private String addBase()
     {
+        pieces += 1;
+        //look for the center of the box
+        float xCenter = positionX + width / 2;
+        float yCenter = positionY + height / 2;
 
-        return "";
+        String svgContent = String.format("""
+            <rect x="%f" y="%f" width="%.1f" height="%.1f" fill="lightblue" stroke="navy" stroke-width="%.1f"/>
+            <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
+            """, positionX, positionY, width, height, strokeWidth, xCenter, yCenter, engraving); //add the variables with %f (for floats), %s (for strings)
+
+        if(pieces < 3)
+            positionX += spaceBetween + width;
+        else
+        {
+            positionY += spaceBetween + height;
+            positionX = 10;
+            pieces = 0;
+        }
+
+        return svgContent;
     }
 
     private String addSide1()
     {
+        pieces += 1;
+        //look for the center of the box
+        float xCenter = positionX + width / 2;
+        float yCenter = positionY + height / 2;
 
-        return "";
+        String svgContent = String.format("""
+            <rect x="%f" y="%f" width="%.1f" height="%.1f" fill="lightblue" stroke="navy" stroke-width="%.1f"/>
+            <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
+            """, positionX, positionY, width, height, strokeWidth, xCenter, yCenter, engraving); //add the variables with %f (for floats), %s (for strings)
+
+        if(pieces < 3)
+            positionX += spaceBetween + width;
+        else
+        {
+            positionY += spaceBetween + height;
+            positionX = 10;
+            pieces = 0;
+        }
+
+        return svgContent;
     }
 
     private String addSide2()
     {
-        return "";
+        pieces += 1;
+        //look for the center of the box
+        float xCenter = positionX + width / 2;
+        float yCenter = positionY + height / 2;
+
+        String svgContent = String.format("""
+            <rect x="%f" y="%f" width="%.1f" height="%.1f" fill="lightblue" stroke="navy" stroke-width="%.1f"/>
+            <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
+            """, positionX, positionY, width, height, strokeWidth, xCenter, yCenter, engraving); //add the variables with %f (for floats), %s (for strings)
+
+        if(pieces < 3)
+            positionX += spaceBetween + width;
+        else
+        {
+            positionY += spaceBetween + height;
+            positionX = 10;
+            pieces = 0;
+        }
+
+        return svgContent;
     }
 
-    private String top()
+    private String addTop()
     {
+        pieces += 1;
+        //look for the center of the box
+        float xCenter = positionX + width / 2;
+        float yCenter = positionY + height / 2;
 
-        return "";
+        String svgContent = String.format("""
+            <rect x="%f" y="%f" width="%.1f" height="%.1f" fill="lightblue" stroke="navy" stroke-width="%.1f"/>
+            <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
+            """, positionX, positionY, width, height, strokeWidth, xCenter, yCenter, engraving); //add the variables with %f (for floats), %s (for strings)
+
+        if(pieces < 3)
+            positionX += spaceBetween + width;
+        else
+        {
+            positionY += spaceBetween + height;
+            positionX = 10;
+            pieces = 0;
+        }
+
+        return svgContent;
     }
 }
