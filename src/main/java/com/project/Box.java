@@ -6,8 +6,8 @@ import java.io.IOException;
 public class Box
 {
     private float width = 0.0f, height = 0.0f;
-    private String engraving, font;
-    private final float MinumumSize = 25.0f, strokeWidth = 2.0f; // Debug values
+    private String engraving, font, fileName;
+    private final float MinimumSize = 25.0f, strokeWidth = 2.0f; // Debug values
 
     //create two variables to track the position of every piece we add
     private float positionX = 10;
@@ -15,29 +15,30 @@ public class Box
     //create a variable to track the pieces created
     private int pieces = 0;
     //create a variable for the space between the pieces
-    private int spaceBetween = 10;
+    private final int spaceBetween = 10;
 
-    public Box(float width, float height, String engraving, String font)
+    public Box(float width, float height, String engraving, String font, String fileName)
     {
-        if(width < MinumumSize || height < MinumumSize)
-            throw new IllegalArgumentException("Width and Height must be at least " + MinumumSize);
+        if(width < MinimumSize || height < MinimumSize)
+            throw new IllegalArgumentException("Width and Height must be at least " + MinimumSize);
         this.width = width;
         this.height = height;
         this.engraving = engraving;
         this.font = font;
+        this.fileName = fileName;
     }
     
     public void setWidth(float width)
     {
-        if(width < MinumumSize)
-            throw new IllegalArgumentException("Width must be at least " + MinumumSize);
+        if(width < MinimumSize)
+            throw new IllegalArgumentException("Width must be at least " + MinimumSize);
         this.width = width;
     }
 
     public void setHeight(float height)
     {
-        if(height < MinumumSize)
-            throw new IllegalArgumentException("Height must be at least " + MinumumSize);
+        if(height < MinimumSize)
+            throw new IllegalArgumentException("Height must be at least " + MinimumSize);
         this.height = height;
     }
 
@@ -53,7 +54,7 @@ public class Box
 
     public Box build()
     {
-        return new Box(width, height, engraving, font);
+        return new Box(width, height, engraving, font, fileName);
     }
 
     public void print()
@@ -61,7 +62,7 @@ public class Box
         //create a variable for padding
         float padding = 10;
         //create a variable for the file_width and file_height
-        float file_width = width*3 + 2*spaceBetween + 2*padding; //space_between is for the space between the pieces and
+        float file_width = width*3 + 2*spaceBetween + 2*padding; //padding is for the space between the pieces and
         float file_height = height*2 + spaceBetween + 2*padding;
         //break the string down
         String svgOpener = String.format("""
@@ -82,10 +83,10 @@ public class Box
         svgContent += addTop();
         //creating the svg file
         String svgWhole = svgOpener + svgContent + svgCloser;
-        File file = new File("exports/example.svg");
+        File file = new File("exports/" + fileName + ".svg");
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(svgWhole);
-            System.out.println("SVG file created: example.svg");
+            System.out.println("SVG file created:" + fileName + ".svg");
         } catch (IOException e) {
             e.printStackTrace();
         }
