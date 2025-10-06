@@ -99,7 +99,7 @@ public class Box
         float yCenter = positionY + height / 2;
 
         String svgContent = String.format("""
-            <rect x="%f" y="%f" width="%.1f" height="%.1f" fill="lightblue" stroke="navy" stroke-width="%.1f"/>
+            <rect x="%f" y="%f" width="%.1f" height="%.1f" stroke-width="%.1f"/>
             <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
             """, positionX, positionY, width, height, strokeWidth, xCenter, yCenter, engraving); //add the variables with %f (for floats), %s (for strings)
 
@@ -123,7 +123,7 @@ public class Box
         float yCenter = positionY + height / 2;
 
         String svgContent = String.format("""
-            <rect x="%f" y="%f" width="%.1f" height="%.1f" fill="lightblue" stroke="navy" stroke-width="%.1f"/>
+            <rect x="%f" y="%f" width="%.1f" height="%.1f" stroke-width="%.1f"/>
             <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
             """, positionX, positionY, width, height, strokeWidth, xCenter, yCenter, engraving); //add the variables with %f (for floats), %s (for strings)
 
@@ -147,7 +147,7 @@ public class Box
         float yCenter = positionY + height / 2;
 
         String svgContent = String.format("""
-            <rect x="%f" y="%f" width="%.1f" height="%.1f" fill="lightblue" stroke="navy" stroke-width="%.1f"/>
+            <rect x="%f" y="%f" width="%.1f" height="%.1f" stroke-width="%.1f"/>
             <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
             """, positionX, positionY, width, height, strokeWidth, xCenter, yCenter, engraving); //add the variables with %f (for floats), %s (for strings)
 
@@ -171,7 +171,7 @@ public class Box
         float yCenter = positionY + height / 2;
 
         String svgContent = String.format("""
-            <rect x="%f" y="%f" width="%.1f" height="%.1f" fill="lightblue" stroke="navy" stroke-width="%.1f"/>
+            <rect x="%f" y="%f" width="%.1f" height="%.1f" stroke-width="%.1f"/>
             <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
             """, positionX, positionY, width, height, strokeWidth, xCenter, yCenter, engraving); //add the variables with %f (for floats), %s (for strings)
 
