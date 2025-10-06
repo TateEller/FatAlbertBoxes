@@ -5,8 +5,8 @@ import java.io.IOException;
 
 public class Box
 {
-    private float width = 0.0f, height = 0.0f;
-    private String engraving, font, fileName;
+    public float width = 0.0f, height = 0.0f;
+    public String engraving, font, fileName;
     private final float MinimumSize = 25.0f, strokeWidth = 2.0f; // Debug values
 
     //create two variables to track the position of every piece we add
@@ -50,6 +50,11 @@ public class Box
     public void setFont(String font)
     {
         this.font = font;
+    }
+
+    public void setFileName(String fileName)
+    {
+        this.fileName = fileName;
     }
 
     public Box build()
