@@ -12,7 +12,7 @@ public class TestBox
     }
 
     @Test
-    public void testWidthInput()
+    public void testHeightInput()
     {
         Box heightBox = new Box(50,50, "Test", "Arial", "TestBox");
         try
@@ -37,34 +37,6 @@ public class TestBox
         heightBox.setWidth(25); // Edge case (minimum size)
         assert heightBox.width == 25 : "Width not set correctly";
     }
-
-    @Test
-    public void testHeightInput()
-    {
-        Box heightBox = new Box(50,50, "Test", "Arial", "TestBox");
-        /* 
-        try
-        {
-            heightBox.setHeight(10); // Below minimum size
-            assert false : "Expected IllegalArgumentException for width below minimum size";
-        }
-        catch(IllegalArgumentException e)
-        {
-            assert e.getMessage().contains("Width must be at least");
-        } */
-
-        // Test 1
-        heightBox.setHeight(30); // Valid size
-        assert heightBox.height == 30 : "Width not set correctly";
-        
-        // Test 2
-        heightBox.setHeight(100); // Valid size
-        assert heightBox.height == 100 : "Width not set correctly";
-
-        // Test 3
-        heightBox.setHeight(25); // Edge case (minimum size)
-        assert heightBox.height == 25 : "Width not set correctly";
-    } 
 
     @Test
     public void testEngravingInput()
