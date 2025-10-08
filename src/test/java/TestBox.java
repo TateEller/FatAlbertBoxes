@@ -12,7 +12,7 @@ public class TestBox
     }
 
     @Test
-    public void testWidthInput()
+    public void testHeightInput()
     {
         Box heightBox = new Box(50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox");
         try
@@ -39,7 +39,7 @@ public class TestBox
     }
 
     @Test
-    public void testHeightInput()
+    public void testWidthInput()
     {
         Box heightBox = new Box(50,50,50,5, "Test", "Arial", "TestBox");
         try
