@@ -17,6 +17,33 @@ public class TestBox
         Box heightBox = new Box(50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox");
         try
         {
+            heightBox.setHeight(10); // Below minimum size
+            assert false : "Expected IllegalArgumentException for width below minimum size";
+        }
+        catch(IllegalArgumentException e)
+        {
+            assert e.getMessage().contains("Height must be at least");
+        }
+
+        // Test 1
+        heightBox.setHeight(30); // Valid size
+        assert heightBox.height == 30 : "Height not set correctly";
+        
+        // Test 2
+        heightBox.setHeight(100); // Valid size
+        assert heightBox.height == 100 : "Height not set correctly";
+
+        // Test 3
+        heightBox.setHeight(25); // Edge case (minimum size)
+        assert heightBox.height == 25 : "Height not set correctly";
+    }
+
+    @Test
+    public void testWidthInput()
+    {
+        Box heightBox = new Box(50,50,50,5, "Test", "Arial", "TestBox");
+        try
+        {
             heightBox.setWidth(10); // Below minimum size
             assert false : "Expected IllegalArgumentException for width below minimum size";
         }
@@ -36,33 +63,6 @@ public class TestBox
         // Test 3
         heightBox.setWidth(25); // Edge case (minimum size)
         assert heightBox.width == 25 : "Width not set correctly";
-    }
-
-    @Test
-    public void testWidthInput()
-    {
-        Box heightBox = new Box(50,50,50,5, "Test", "Arial", "TestBox");
-        try
-        {
-            heightBox.setHeight(10); // Below minimum size
-            assert false : "Expected IllegalArgumentException for width below minimum size";
-        }
-        catch(IllegalArgumentException e)
-        {
-            assert e.getMessage().contains("Width must be at least");
-        }
-
-        // Test 1
-        heightBox.setHeight(30); // Valid size
-        assert heightBox.height == 30 : "Width not set correctly";
-        
-        // Test 2
-        heightBox.setHeight(100); // Valid size
-        assert heightBox.height == 100 : "Width not set correctly";
-
-        // Test 3
-        heightBox.setHeight(25); // Edge case (minimum size)
-        assert heightBox.height == 25 : "Width not set correctly";
     } 
 
     @Test
@@ -81,15 +81,15 @@ public class TestBox
 
         // Test 1
         depthBox.setDepth(30); // Valid size
-        assert depthBox.depth == 30 : "Width not set correctly";
+        assert depthBox.depth == 30 : "Depth not set correctly";
         
         // Test 2
         depthBox.setDepth(100); // Valid size
-        assert depthBox.depth == 100 : "Width not set correctly";
+        assert depthBox.depth == 100 : "Depth not set correctly";
 
         // Test 3
         depthBox.setDepth(25); // Edge case (minimum size)
-        assert depthBox.depth == 25 : "Width not set correctly";
+        assert depthBox.depth == 25 : "Depth not set correctly";
     }
 
     @Test

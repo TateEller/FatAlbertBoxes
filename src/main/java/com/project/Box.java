@@ -2,14 +2,14 @@ package com.project;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Locale; //change standard settings to America
+import java.util.Locale; //Change standard settings to America
 
 public class Box
 {
     public float width = 0.0f, height = 0.0f, depth = 0.0f;
     public int numTabs;
     public String engraving, font, fileName;
-    private final float MinimumSize = 25.0f, strokeWidth = 0.05f, widthOfKnobs = 4, heightOfKnobs = 1; // Debug values
+    private final float MinimumSize = 25.0f, strokeWidth = 0.05f, widthOfKnobs = 4, heightOfKnobs = 1, tabDepth = 12.0f; // Debug values
 
     // Create two variables to track the position of every piece we add
     private float positionX = 10;
@@ -17,7 +17,7 @@ public class Box
     // Create a variable to track the pieces created
     private int pieces = 0;
     // Create a variable for the space between the pieces
-    private final int spaceBetween = 10;
+    private final int spaceBetween = 20;
 
     public Box(float width, float height, float depth, int numTabs, String engraving, String font, String fileName)
     {
@@ -75,8 +75,8 @@ public class Box
 
     public void print()
     {
-        Locale.setDefault(Locale.US);   //my standard settings are European settings, so please dont remove
-        //create a variable for padding
+        Locale.setDefault(Locale.US);   // My standard settings are European settings, so please dont remove
+        // Create a variable for padding
         float padding = 10;
         // Create a variable for the file_width and file_height
         float file_width = width * 3 + 2 * spaceBetween + 2 * padding; // Padding is for the space between the pieces
@@ -185,14 +185,14 @@ public class Box
         return svgContent.toString();
     }
 
-    private String addSideA()
+    public String addSideA()
     {
         pieces += 1;
         // Look for the center of the box
         float xCenter = positionX + width / 2;
         float yCenter = positionY + height / 2;
 
-        String pathData = GenerateRectanglePath(positionX, positionY, width, height, 4.0f, numTabs);
+        String pathData = GenerateRectanglePath(positionX, positionY, width, height, tabDepth, numTabs);
 
         String svgContent = String.format("""
                 <path d="%s" stroke-width="%.1f" fill="none" stroke="black"/>
@@ -219,7 +219,7 @@ public class Box
         float xCenter = positionX + width / 2;
         float yCenter = positionY + height / 2;
 
-        String pathData = GenerateRectanglePath(positionX, positionY, width, height, -4.0f, numTabs);
+        String pathData = GenerateRectanglePath(positionX, positionY, width, height, -tabDepth, numTabs);
 
         String svgContent = String.format("""
                 <path d="%s" stroke-width="%.1f" fill="none" stroke="black"/>
@@ -246,20 +246,23 @@ public class Box
         float xCenter = positionX + width / 2;
         float yCenter = positionY + depth / 2;
 
-        String svgContent = String.format("""
-            <rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="none" stroke="black" stroke-width="%.1f"/>
-            <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
-            """, positionX, positionY, width, depth, strokeWidth, xCenter, yCenter, engraving); //add the variables with %f (for floats), %s (for strings)
+        String pathData = GenerateRectanglePath(positionX, positionY, width, height, -tabDepth, numTabs);
 
-        if (pieces < 3)
-            positionX += spaceBetween + width;
-        else
+        String svgContent = String.format("""
+                <path d="%s" stroke-width="%.1f" fill="none" stroke="black"/>
+                <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
+                """, pathData, strokeWidth, xCenter, yCenter, engraving);
+
+        if (pieces < 3) 
         {
-            positionY += spaceBetween + depth;
+            positionX += spaceBetween + width;
+        } 
+        else 
+        {
+            positionY += spaceBetween + height;
             positionX = 10;
             pieces = 0;
         }
-
         return svgContent;
     }
 
@@ -324,11 +327,50 @@ public class Box
         return path.toString(); // Return the constructed path
     }
 
-    // Add this method to fix the compilation error
     private String basePrintSquares(float x, float y, float w, float h) {
         return String.format(
             "<rect x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\" fill=\"none\" stroke=\"black\" stroke-width=\"%.2f\" />\n",
             x, y, w, h, strokeWidth
         );
+    }
+
+    public void printSingleSide() 
+    {
+        Locale.setDefault(Locale.US);
+        float padding = 10;
+        float file_width = width + 2 * padding;
+        float file_height = height + 2 * padding;
+
+        String svgOpener = String.format("""
+            <svg xmlns="http://www.w3.org/2000/svg" width="%.1f" height="%.1f">
+            <rect width="100%%" height="100%%" fill="white"/>
+            """, file_width, file_height);
+
+        // Reset position for single side
+        float sideX = padding;
+        float sideY = padding;
+        float xCenter = sideX + width / 2;
+        float yCenter = sideY + height / 2;
+
+        String pathData = GenerateRectanglePath(sideX, sideY, width, height, 4.0f, numTabs);
+
+        String svgContent = String.format("""
+                <path d="%s" stroke-width="%.2f" fill="none" stroke="black"/>
+                <text x="%.1f" y="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
+                """, pathData, strokeWidth, xCenter, yCenter, engraving);
+
+        String svgCloser = "</svg>";
+
+        String svgWhole = svgOpener + svgContent + svgCloser;
+        File file = new File("exports/" + fileName + "_sideA.svg");
+        try (FileWriter writer = new FileWriter(file)) 
+        {
+            writer.write(svgWhole);
+            System.out.println("SVG file created: " + fileName + "_sideA.svg");
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
     }
 }
