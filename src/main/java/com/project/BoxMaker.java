@@ -26,7 +26,7 @@ public class BoxMaker
         test.print();*/
 
         //width and depth have to be at least...
-        Box test3 = new Box(59, 89, 91, 5, "FA", "Arial", "test");
+        Box test3 = new Box(40, 30, 55, 5, "FA", "Arial", "test");
         test3.print();
     }
 }

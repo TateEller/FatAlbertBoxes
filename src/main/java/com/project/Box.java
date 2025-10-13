@@ -94,9 +94,11 @@ public class Box
             file_height = height * 2 + spaceBetween + 2 * padding;
         // Break the string down
         String svgOpener = String.format("""
-            <svg xmlns="http://www.w3.org/2000/svg" width="%f" height="%f">
+            <svg xmlns="http://www.w3.org/2000/svg" 
+            width="%fmm" height="%fmm"
+            viewBox="0 0 %f %f">
             <rect width="100%%" height="100%%" fill="white"/>
-            """, file_width, file_height);
+            """, file_width, file_height, file_width, file_height);
 
         String svgCloser = """
             </svg>
@@ -142,8 +144,8 @@ public class Box
             """, positionX, positionY, widthBase, depthBase, strokeWidth, xCenter, yCenter, engraving));
 
         // --- Number of knobs per side ---
-        int nHorizontal = (int)(width / (2*widthOfKnobs))*2;
-        int nVertical = (int)(depth / (2*widthOfKnobs))*2;
+        int nHorizontal = (int)(width*2 / (2*widthOfKnobs));
+        int nVertical = (int)(depth*2 / (2*widthOfKnobs));
         //caculate the space we need on the sides
         if(nHorizontal % 2 == 0)
             nHorizontal -= 1;
