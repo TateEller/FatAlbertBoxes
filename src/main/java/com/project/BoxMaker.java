@@ -25,8 +25,8 @@ public class BoxMaker
         scanner.close();
         test.print();*/
 
-        //width and depth have to be at least
-        Box test3 = new Box(100, 50, 25, 5, "FA", "Arial", "test");
+        //width and depth have to be at least...
+        Box test3 = new Box(59, 89, 91, 5, "FA", "Arial", "test");
         test3.print();
     }
 }
