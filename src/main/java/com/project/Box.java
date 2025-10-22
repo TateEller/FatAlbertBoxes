@@ -11,7 +11,7 @@ public class Box
     public int numTabs;
     public String engraving, font, fileName;
     public float fontSize;
-    private final float MinimumSize = 25.0f, strokeWidth = 0.1f, widthOfKnobs = 24, heightOfKnobs = 12, tabDepth = 12.0f; // Debug values
+    private final float MinimumSize = 25.0f, strokeWidth = 0.1f, widthOfKnobs = 10, heightOfKnobs = 5, tabDepth = 12.0f; // Debug values
 
     // Create two variables to track the position of every piece we add
     private float positionX = 10;
