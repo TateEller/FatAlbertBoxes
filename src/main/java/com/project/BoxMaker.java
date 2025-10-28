@@ -27,10 +27,5 @@ public class BoxMaker
 
         //width and depth have to be at least...
         //in pixels.  1 inch = 96 pixels
-<<<<<<< HEAD
-        Box test3 = new Box(50, 50, 50, 10, "HHHHH", "Myriad Pro", "test");
-        test3.print();
-=======
->>>>>>> ac575d86ece6cfba14cd8cf2bc39b2fa20c0a35d
     }
 }
