@@ -10,7 +10,8 @@ public class Box
     public float width = 0.0f, height = 0.0f, depth = 0.0f;
     public int numTabs;
     public String engraving, font, fileName;
-    private final float MinimumSize = 25.0f, strokeWidth = 0.1f, widthOfKnobs = 4, heightOfKnobs = 2.6f, tabDepth = 12.0f; // Debug values
+    public float fontSize;
+    private final float MinimumSize = 25.0f, strokeWidth = 0.1f, widthOfKnobs = 10, heightOfKnobs = 5, tabDepth = 12.0f; // Debug values
 
     // Create two variables to track the position of every piece we add
     private float positionX = 10;
@@ -29,6 +30,7 @@ public class Box
         this.depth = depth;
         this.numTabs = numTabs;
         this.engraving = engraving;
+        setFontSize(engraving);
         this.font = font;
         this.fileName = fileName;
         this.spaceBetween = 5 + 2*(int)this.widthOfKnobs;
@@ -65,9 +67,20 @@ public class Box
         this.font = font;
     }
 
+    public void setFontSize(String engraving)
+    {
+        this.fontSize = Math.min(this.width / engraving.length(), this.height);
+    }
+
     public void setFileName(String fileName)
     {
         this.fileName = fileName;
+    }
+
+    public void setKnobs(int numTabs)
+    {
+        this.numTabs = numTabs;
+        //this.widthOfKnobs = 12;
     }
 
     public Box build()
@@ -141,7 +154,7 @@ public class Box
         StringBuilder svgContent = new StringBuilder(String.format("""
             <rect x="%f" y="%f" width="%f" height="%f" fill="none" stroke="black" stroke-width="%f"/>
             <text x="%f" y="%f" text-anchor="middle" font-size="10" dominant-baseline="middle">%s</text>
-            """, positionX, positionY, widthBase, depthBase, strokeWidth, xCenter, yCenter, engraving));
+            """, positionX, positionY, widthBase, depthBase, strokeWidth, xCenter, yCenter, ""));  //having ("") at the end stops it from engraving on the bottom
 
         // --- Number of knobs per side ---
         int nHorizontal = (int)(width*2 / (2*widthOfKnobs));
@@ -214,9 +227,6 @@ public class Box
     public String addSideA()
     {
         pieces += 1;
-        // Look for the center of the box
-        float xCenter = positionX + depth / 2 + heightOfKnobs;
-        float yCenter = positionY + height / 2 + heightOfKnobs; 
 
         // --- Number of knobs per side ---
         int nHorizontal = (int)(depth*2 / (2*widthOfKnobs));
@@ -224,10 +234,21 @@ public class Box
         //caculate the space we need on the sides
         float marginX = heightOfKnobs+(depth*2 - (nHorizontal*widthOfKnobs*2)) /2;
         float marginY = heightOfKnobs+(height*2 - (nVertical*widthOfKnobs*2)) /2;
+
+        // Look for the center of the box
+        float xCenter = positionX + (depth) / 2 + heightOfKnobs;
+        float yCenter = positionY + (height) / 2 + heightOfKnobs;
+
         if(nHorizontal % 2 == 0)
+        {
             nHorizontal -= 1;
+            xCenter -= heightOfKnobs;
+        }
         if(nVertical % 2 == 0)
+        {
             nVertical -= 1;
+            yCenter -= heightOfKnobs;
+        }
         //System.out.println(marginX + " " + nHorizontal + " " + nVertical);
 
         //String pathData = GenerateRectanglePath(positionX, positionY, width, height, tabDepth, numTabs);
@@ -235,8 +256,8 @@ public class Box
 
         String svgContent = String.format("""
                 <path d="%s" stroke-width="%f" fill="none" stroke="black"/>
-                <text x="%.1f" y="%.1f" font-size="10" text-anchor="middle" dominant-baseline="middle">%s</text>
-                """, pathData, strokeWidth, xCenter, yCenter, engraving);
+                <text x="%.1f" y="%.1f" font-size="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
+                """, pathData, strokeWidth, xCenter, yCenter, fontSize, engraving);
 
         float depthBase = depth + 2 * widthOfKnobs;
         
@@ -259,9 +280,10 @@ public class Box
     private String addSideB()
     {
         pieces += 1;
+
         // Look for the center of the box
-        float xCenter = positionX + width / 2 + heightOfKnobs;
-        float yCenter = positionY + height / 2 + heightOfKnobs;
+        float xCenter = positionX + (width) / 2 + heightOfKnobs;
+        float yCenter = positionY + (height) / 2 + heightOfKnobs;
 
         // --- Number of knobs per side ---
         int nHorizontal = (int)(width*2 / (2*widthOfKnobs));
@@ -274,9 +296,15 @@ public class Box
             marginX = marginX - heightOfKnobs;
 
         if(nHorizontal % 2 == 0)
+        {
             nHorizontal -= 1;
+            xCenter -= heightOfKnobs;
+        }
         if(nVertical % 2 == 0)
+        {
             nVertical -= 1;
+            yCenter -= heightOfKnobs;
+        }
         //System.out.println(marginX + " " + nHorizontal + " " + nVertical);
 
         //String pathData = GenerateRectanglePath(positionX, positionY, width, height, tabDepth, numTabs);
@@ -286,8 +314,8 @@ public class Box
 
         String svgContent = String.format("""
                 <path d="%s" stroke-width="%f" fill="none" stroke="black"/>
-                <text x="%.1f" y="%.1f" font-size="10" text-anchor="middle" dominant-baseline="middle">%s</text>
-                """, pathData, strokeWidth, xCenter, yCenter, engraving);
+                <text x="%.1f" y="%.1f" font-size="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
+                """, pathData, strokeWidth, xCenter, yCenter, fontSize, engraving);
 
         if (pieces < 3) 
         {
@@ -305,9 +333,6 @@ public class Box
     private String addTop()
     {
         pieces += 1;
-        // Look for the center of the box
-        float xCenter = positionX + width / 2 + heightOfKnobs;
-        float yCenter = positionY + depth / 2 + heightOfKnobs;
 
         // --- Number of knobs per side ---
         int nHorizontal = (int)(width*2 / (2*widthOfKnobs));
@@ -322,6 +347,9 @@ public class Box
         if(nVertical % 2 == 0)
             nVertical -= 1;
         //System.out.println(marginX + " " + nHorizontal + " " + nVertical);
+        // Look for the center of the box
+        float xCenter = positionX + ((nHorizontal*widthOfKnobs)+marginX*2) / 2;
+        float yCenter = positionY + ((nVertical*widthOfKnobs)+marginY*2) / 2;
 
         //String pathData = GenerateRectanglePath(positionX, positionY, width, height, -tabDepth, numTabs);
         String pathData = GenerateRectanglePathTop(positionX, positionY, width, depth, heightOfKnobs, nHorizontal, nVertical, marginX, marginY);
@@ -329,7 +357,7 @@ public class Box
         String svgContent = String.format("""
                 <path d="%s" stroke-width="%f" fill="none" stroke="black"/>
                 <text x="%.1f" y="%.1f" font-size="10" text-anchor="middle" dominant-baseline="middle">%s</text>
-                """, pathData, strokeWidth, xCenter, yCenter, engraving);
+                """, pathData, strokeWidth, xCenter, yCenter, ""); //having ("") and the end stops it engraving on the top
 
         if (pieces < 3) 
         {

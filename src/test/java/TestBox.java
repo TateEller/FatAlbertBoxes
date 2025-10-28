@@ -127,4 +127,41 @@ public class TestBox
         fontBox.setFont("Courier New");
         assert fontBox.font.equals("Courier New") : "Font not set correctly";
     }
+
+    @Test
+    public void testTabInput()
+    {
+        Box tabBox = new Box(50, 50, 50, 5, "Test", "Arial", "TestBox");
+
+        // Test 1
+        tabBox.setKnobs(5);
+        assert tabBox.numTabs == 5;
+
+        // Test 2
+        tabBox.setKnobs(10);
+        assert  tabBox.numTabs == 10;
+
+        // Test 3
+        tabBox.setKnobs(20);
+        assert tabBox.numTabs == 20;
+    }
+
+    @Test
+    public void testFileName()
+    {
+        Box fileBox = new Box(50, 50, 50, 5, "Test", "Arial", "TestBox");
+
+        // Test 1
+        fileBox.setFileName("Test1");
+        assert fileBox.fileName.equals("Test1");
+
+        // Test 2
+        fileBox.setFileName("Test2");
+        assert fileBox.fileName.equals("Test2");
+
+        // Test 3
+        fileBox.setFileName("Test3");
+        assert fileBox.fileName.equals("Test3");
+    }
+    
 }
