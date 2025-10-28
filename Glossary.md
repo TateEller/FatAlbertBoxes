@@ -2,11 +2,11 @@
 
 An alphebetized list of terms and acronyms for this project.
 
-**Blueprint**
-: The shape created by the SVG file upon its creation.
-
 **Baseplate**
 : The bottom piece of the box design. It is slightly larger than the other sides and includes holes instead of tabs for assembly.
+
+**Blueprint**
+: The shape created by the SVG file upon its creation.
 
 **Dimensions**
 : The length, width, heighth, and depth of the desired box.
