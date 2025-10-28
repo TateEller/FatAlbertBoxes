@@ -134,15 +134,15 @@ public class TestBox
         Box tabBox = new Box(50, 50, 50, 5, "Test", "Arial", "TestBox");
 
         // Test 1
-        tabBox.setKnobs(5);
+        tabBox.setTabs(5);
         assert tabBox.numTabs == 5;
 
         // Test 2
-        tabBox.setKnobs(10);
+        tabBox.setTabs(10);
         assert  tabBox.numTabs == 10;
 
         // Test 3
-        tabBox.setKnobs(20);
+        tabBox.setTabs(20);
         assert tabBox.numTabs == 20;
     }
 

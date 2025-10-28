@@ -6,7 +6,7 @@ public class BoxMaker
     {
         Scanner scanner = new Scanner(System.in);
 
-        /*System.out.print("Enter dimensions (width,height,depth): ");
+        System.out.print("Enter dimensions (width,height,depth): ");
 
         String[] dimensions = scanner.nextLine().trim().split("\\s*,\\s*|\\s+"); // Split by comma or whitespace
         float width = Float.parseFloat(dimensions[0]) * 96f, height = Float.parseFloat(dimensions[1]) * 96f, depth = Float.parseFloat(dimensions[2]) * 96f; // Convert inches to pixels
@@ -23,11 +23,14 @@ public class BoxMaker
         String font = ""; // Will need to get from user input later
         Box test = new Box(width, height, depth, numTabs, engraving, font, fileName);
         scanner.close();
-        test.print();*/
+        test.print();
 
         //width and depth have to be at least...
         //in pixels.  1 inch = 96 pixels
+<<<<<<< HEAD
         Box test3 = new Box(50, 50, 50, 10, "HHHHH", "Myriad Pro", "test");
         test3.print();
+=======
+>>>>>>> ac575d86ece6cfba14cd8cf2bc39b2fa20c0a35d
     }
 }

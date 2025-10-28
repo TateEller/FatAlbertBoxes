@@ -11,7 +11,7 @@ public class Box
     public int numTabs;
     public String engraving, font, fileName;
     public float fontSize;
-    private final float MinimumSize = 25.0f, strokeWidth = 0.1f, widthOfKnobs = 10, heightOfKnobs = 5, tabDepth = 12.0f; // Debug values
+    private final float MinimumSize = 25.0f, strokeWidth = 0.1f, widthOfTabs = 10, heightOfTabs = 5, tabDepth = 11.0f; // Debug values
 
     // Create two variables to track the position of every piece we add
     private float positionX = 10;
@@ -33,9 +33,10 @@ public class Box
         setFontSize(engraving);
         this.font = font;
         this.fileName = fileName;
-        this.spaceBetween = 5 + 2*(int)this.widthOfKnobs;
+        this.spaceBetween = 5 + 2*(int)this.widthOfTabs;
     }
-    
+
+    // Width Setter
     public void setWidth(float width)
     {
         if(width < MinimumSize)
@@ -43,6 +44,7 @@ public class Box
         this.width = width;
     }
 
+    // Height Setter
     public void setHeight(float height)
     {
         if(height < MinimumSize)
@@ -50,6 +52,7 @@ public class Box
         this.height = height;
     }
 
+    // Depth Setter
     public void setDepth(float depth)
     {
         if(depth < MinimumSize)
@@ -57,27 +60,32 @@ public class Box
         this.depth = depth;
     }
 
+    // Engraving Setter
     public void setEngraving(String engraving)
     {
         this.engraving = engraving;
     }
 
+    // Font Setter
     public void setFont(String font)
     {
         this.font = font;
     }
 
+    // Font Size Setter
     public void setFontSize(String engraving)
     {
         this.fontSize = Math.min(this.width / engraving.length(), this.height);
     }
 
+    // File Name Setter
     public void setFileName(String fileName)
     {
         this.fileName = fileName;
     }
 
-    public void setKnobs(int numTabs)
+    // Tab Setter
+    public void setTabs(int numTabs)
     {
         this.numTabs = numTabs;
         //this.widthOfKnobs = 12;
@@ -91,13 +99,14 @@ public class Box
     public void print()
     {
         Locale.setDefault(Locale.US);   // My standard settings are European settings, so please dont remove
-        // Create a variable for padding
-        float padding = 10;
+        float padding = 10; // Create a variable for padding
+        
         // Base slightly larger than the rest
-        float widthBase = width + 2 * widthOfKnobs;
-        float depthBase = depth + 2 * widthOfKnobs;
+        float widthBase = width + 2 * widthOfTabs;
+        float depthBase = depth + 2 * widthOfTabs;
+
         // Create a variable for the file_width and file_height
-        float file_width = widthBase + width * 3 + 2 * spaceBetween + 2 * padding; // Padding is for the space between the pieces
+        float file_width = widthBase + width * 3 + 2 * spaceBetween + 2 * padding;
         float file_height;
         if(depthBase > height)
         {
@@ -119,13 +128,16 @@ public class Box
         String svgContent = "";
         // One base
         svgContent += addBase();
+
         // Add the top
         svgContent += addTop();
+
         // Add four sides
         svgContent += addSideA();
         svgContent += addSideA();
         svgContent += addSideB();
         svgContent += addSideB();
+        
         // Creating the svg file
         String svgWhole = svgOpener + svgContent + svgCloser;
         File file = new File("exports/" + fileName + ".svg");
@@ -145,8 +157,8 @@ public class Box
         pieces += 1;
 
         // Base slightly larger than the rest
-        float widthBase = width + 5 * heightOfKnobs;
-        float depthBase = depth + 5 * heightOfKnobs;
+        float widthBase = width + 5 * heightOfTabs;
+        float depthBase = depth + 5 * heightOfTabs;
         float xCenter = positionX + widthBase / 2;
         float yCenter = positionY + depthBase / 2;
 
@@ -156,9 +168,9 @@ public class Box
             <text x="%f" y="%f" text-anchor="middle" font-size="10" dominant-baseline="middle">%s</text>
             """, positionX, positionY, widthBase, depthBase, strokeWidth, xCenter, yCenter, ""));  //having ("") at the end stops it from engraving on the bottom
 
-        // --- Number of knobs per side ---
-        int nHorizontal = (int)(width*2 / (2*widthOfKnobs));
-        int nVertical = (int)(depth*2 / (2*widthOfKnobs));
+        // --- Number of tabs per side ---
+        int nHorizontal = (int)(width*2 / (2*widthOfTabs));
+        int nVertical = (int)(depth*2 / (2*widthOfTabs));
         //caculate the space we need on the sides
         if(nHorizontal % 2 == 0)
             nHorizontal -= 1;
@@ -170,8 +182,8 @@ public class Box
         
         
         //caculate the space we need no the sides
-        float marginX = (widthBase - (nHorizontal*widthOfKnobs*2)+ widthOfKnobs) /2;
-        float marginY = (depthBase - (nVertical*widthOfKnobs*2)+ widthOfKnobs) /2;
+        float marginX = (widthBase - (nHorizontal*widthOfTabs*2)+ widthOfTabs) /2;
+        float marginY = (depthBase - (nVertical*widthOfTabs*2)+ widthOfTabs) /2;
 
         //create the size of the original box just for refernce
         //float originalBoxX = positionX + 2.5f*heightOfKnobs;
@@ -181,35 +193,35 @@ public class Box
 
 
         // --- Top edge (inside the base) ---
-        float yTop = positionY + widthOfKnobs;
+        float yTop = positionY + widthOfTabs;
         float xTop = positionX + marginX;
         for (int i = 0; i < nHorizontal; i++) {
-            svgContent.append(basePrintSquares(xTop, yTop, widthOfKnobs, heightOfKnobs));
-            xTop += 2*widthOfKnobs;
+            svgContent.append(basePrintSquares(xTop, yTop, widthOfTabs, heightOfTabs));
+            xTop += 2*widthOfTabs;
         }
 
         // --- Bottom edge (inside the base) ---
-        float yBottom = positionY + depthBase - heightOfKnobs - widthOfKnobs;
+        float yBottom = positionY + depthBase - heightOfTabs - widthOfTabs;
         float xBottom = positionX + marginX;
         for (int i = 0; i < nHorizontal; i++) {
-            svgContent.append(basePrintSquares(xBottom, yBottom, widthOfKnobs, heightOfKnobs));
-            xBottom += 2*widthOfKnobs;
+            svgContent.append(basePrintSquares(xBottom, yBottom, widthOfTabs, heightOfTabs));
+            xBottom += 2*widthOfTabs;
         }
 
         // --- Left edge (inside the base) ---
-        float xLeft = positionX + widthOfKnobs; // move inside
+        float xLeft = positionX + widthOfTabs; // move inside
         float yLeft = positionY + marginY;
         for (int i = 0; i < nVertical; i++) {
-            svgContent.append(basePrintSquares(xLeft, yLeft, heightOfKnobs, widthOfKnobs));
-            yLeft += 2*widthOfKnobs;
+            svgContent.append(basePrintSquares(xLeft, yLeft, heightOfTabs, widthOfTabs));
+            yLeft += 2*widthOfTabs;
         }
 
         // --- Right edge (inside the base) ---
-        float xRight = positionX + widthBase - heightOfKnobs - widthOfKnobs; // move left a bit inside
+        float xRight = positionX + widthBase - heightOfTabs - widthOfTabs; // move left a bit inside
         float yRight = positionY + marginY;
         for (int i = 0; i < nVertical; i++) {
-            svgContent.append(basePrintSquares(xRight, yRight, heightOfKnobs, widthOfKnobs));
-            yRight += 2*widthOfKnobs;
+            svgContent.append(basePrintSquares(xRight, yRight, heightOfTabs, widthOfTabs));
+            yRight += 2*widthOfTabs;
         }
 
         // Move position for next piece
@@ -227,39 +239,38 @@ public class Box
     public String addSideA()
     {
         pieces += 1;
-
-        // --- Number of knobs per side ---
-        int nHorizontal = (int)(depth*2 / (2*widthOfKnobs));
-        int nVertical = (int)(height*2 / (2*widthOfKnobs));
-        //caculate the space we need on the sides
-        float marginX = heightOfKnobs+(depth*2 - (nHorizontal*widthOfKnobs*2)) /2;
-        float marginY = heightOfKnobs+(height*2 - (nVertical*widthOfKnobs*2)) /2;
-
         // Look for the center of the box
-        float xCenter = positionX + (depth) / 2 + heightOfKnobs;
-        float yCenter = positionY + (height) / 2 + heightOfKnobs;
+        float xCenter = positionX + depth / 2 + heightOfTabs;
+        float yCenter = positionY + height / 2 + heightOfTabs; 
 
+        // --- Number of tabs per side ---
+        int nHorizontal = (int)(depth*2 / (2*widthOfTabs));
+        int nVertical = (int)(height*2 / (2*widthOfTabs));
+
+        // Caculate the space we need on the sides
+        float marginX = heightOfTabs+(depth*2 - (nHorizontal*widthOfTabs*2)) /2;
+        float marginY = heightOfTabs+(height*2 - (nVertical*widthOfTabs*2)) /2;
         if(nHorizontal % 2 == 0)
         {
             nHorizontal -= 1;
-            xCenter -= heightOfKnobs;
+            xCenter -= heightOfTabs;
         }
         if(nVertical % 2 == 0)
         {
             nVertical -= 1;
-            yCenter -= heightOfKnobs;
+            yCenter -= heightOfTabs;
         }
         //System.out.println(marginX + " " + nHorizontal + " " + nVertical);
 
-        //String pathData = GenerateRectanglePath(positionX, positionY, width, height, tabDepth, numTabs);
-        String pathData = GenerateRectanglePathSideA(positionX, positionY, width, height, heightOfKnobs, nHorizontal, nVertical, marginX, marginY);
+        // String pathData = GenerateRectanglePath(positionX, positionY, width, height, tabDepth, numTabs);
+        String pathData = GenerateRectanglePathSideA(positionX, positionY, width, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
 
         String svgContent = String.format("""
                 <path d="%s" stroke-width="%f" fill="none" stroke="black"/>
                 <text x="%.1f" y="%.1f" font-size="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
                 """, pathData, strokeWidth, xCenter, yCenter, fontSize, engraving);
 
-        float depthBase = depth + 2 * widthOfKnobs;
+        float depthBase = depth + 2 * widthOfTabs;
         
         if (pieces < 3) 
         {
@@ -282,33 +293,33 @@ public class Box
         pieces += 1;
 
         // Look for the center of the box
-        float xCenter = positionX + (width) / 2 + heightOfKnobs;
-        float yCenter = positionY + (height) / 2 + heightOfKnobs;
+        float xCenter = positionX + width / 2 + heightOfTabs;
+        float yCenter = positionY + height / 2 + heightOfTabs;
 
         // --- Number of knobs per side ---
-        int nHorizontal = (int)(width*2 / (2*widthOfKnobs));
-        int nVertical = (int)(height*2 / (2*widthOfKnobs));
+        int nHorizontal = (int)(width*2 / (2*widthOfTabs));
+        int nVertical = (int)(height*2 / (2*widthOfTabs));
         //caculate the space we need on the sides
-        float marginX = heightOfKnobs+(width*2 - (nHorizontal*widthOfKnobs*2)) /2;
-        float marginY = heightOfKnobs+(height*2 - (nVertical*widthOfKnobs*2)) /2;
+        float marginX = heightOfTabs+(width*2 - (nHorizontal*widthOfTabs*2)) /2;
+        float marginY = heightOfTabs+(height*2 - (nVertical*widthOfTabs*2)) /2;
 
-        if(marginX - heightOfKnobs >= 0)
-            marginX = marginX - heightOfKnobs;
+        if(marginX - heightOfTabs >= 0)
+            marginX = marginX - heightOfTabs;
 
         if(nHorizontal % 2 == 0)
         {
             nHorizontal -= 1;
-            xCenter -= heightOfKnobs;
+            xCenter -= heightOfTabs;
         }
         if(nVertical % 2 == 0)
         {
             nVertical -= 1;
-            yCenter -= heightOfKnobs;
+            yCenter -= heightOfTabs;
         }
         //System.out.println(marginX + " " + nHorizontal + " " + nVertical);
 
         //String pathData = GenerateRectanglePath(positionX, positionY, width, height, tabDepth, numTabs);
-        String pathData = GenerateRectanglePathSideB(positionX, positionY, width, height, heightOfKnobs, nHorizontal, nVertical, marginX, marginY);
+        String pathData = GenerateRectanglePathSideB(positionX, positionY, width, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
 
         //String pathData = GenerateRectanglePath(positionX, positionY, width, height, -tabDepth, numTabs);
 
@@ -333,13 +344,14 @@ public class Box
     private String addTop()
     {
         pieces += 1;
+        // Look for the center of the box
 
-        // --- Number of knobs per side ---
-        int nHorizontal = (int)(width*2 / (2*widthOfKnobs));
-        int nVertical = (int)(depth*2 / (2*widthOfKnobs));
+        // --- Number of tabs per side ---
+        int nHorizontal = (int)(width*2 / (2*widthOfTabs));
+        int nVertical = (int)(depth*2 / (2*widthOfTabs));
         //caculate the space we need on the sides
-        float marginX = (width*2 - (nHorizontal*widthOfKnobs*2)) /2;
-        float marginY = (depth*2 - (nVertical*widthOfKnobs*2)) /2;
+        float marginX = (width*2 - (nHorizontal*widthOfTabs*2)) /2;
+        float marginY = (depth*2 - (nVertical*widthOfTabs*2)) /2;
         
 
         if(nHorizontal % 2 == 0)
@@ -348,11 +360,11 @@ public class Box
             nVertical -= 1;
         //System.out.println(marginX + " " + nHorizontal + " " + nVertical);
         // Look for the center of the box
-        float xCenter = positionX + ((nHorizontal*widthOfKnobs)+marginX*2) / 2;
-        float yCenter = positionY + ((nVertical*widthOfKnobs)+marginY*2) / 2;
+        float xCenter = positionX + ((nHorizontal*widthOfTabs)+marginX*2) / 2;
+        float yCenter = positionY + ((nVertical*widthOfTabs)+marginY*2) / 2;
 
         //String pathData = GenerateRectanglePath(positionX, positionY, width, height, -tabDepth, numTabs);
-        String pathData = GenerateRectanglePathTop(positionX, positionY, width, depth, heightOfKnobs, nHorizontal, nVertical, marginX, marginY);
+        String pathData = GenerateRectanglePathTop(positionX, positionY, width, depth, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
 
         String svgContent = String.format("""
                 <path d="%s" stroke-width="%f" fill="none" stroke="black"/>
@@ -500,7 +512,7 @@ public class Box
         StringBuilder path = new StringBuilder();
         path.append(String.format("M %f %f ", x, y)); // Start at top-left corner
 
-        float seg = widthOfKnobs;
+        float seg = widthOfTabs;
 
         // Top edge
         //always starts with a tab
@@ -596,10 +608,10 @@ public class Box
     public String GenerateRectanglePathSideB(float x, float y, float width, float height, float tabDepth, int nHorizontal, int nVertical, float marginX, float marginY)
     {
         StringBuilder path = new StringBuilder();
-        path.append(String.format("M %f %f ", x+heightOfKnobs, y)); // Start at top-left corner
+        path.append(String.format("M %f %f ", x+heightOfTabs, y)); // Start at top-left corner
         //move it one heightOfKnobs so it fits with the other tiles
 
-        float seg = widthOfKnobs;
+        float seg = widthOfTabs;
 
         // Top edge
         //always starts with a tab
@@ -693,9 +705,9 @@ public class Box
     public String GenerateRectanglePathTop(float x, float y, float width, float height, float tabDepth, int nHorizontal, int nVertical, float marginX, float marginY)
     {
         StringBuilder path = new StringBuilder();
-        path.append(String.format("M %f %f ", x+heightOfKnobs, y+heightOfKnobs)); // Start at top-left corner
+        path.append(String.format("M %f %f ", x+heightOfTabs, y+heightOfTabs)); // Start at top-left corner
 
-        float seg = widthOfKnobs;
+        float seg = widthOfTabs;
 
         // Top edge
         //always starts with a tab
