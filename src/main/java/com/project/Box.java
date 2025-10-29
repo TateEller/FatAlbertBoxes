@@ -8,23 +8,26 @@ import java.util.Locale; //Change standard settings to America
 public class Box
 {
     public float width = 0.0f, height = 0.0f, depth = 0.0f;
-    public int numTabs;
-    public String engraving, font, fileName;
+    public int numTabs, boxType;
+    public String engraving = "", font, fileName;
     public float fontSize;
     private final float MinimumSize = 25.0f, strokeWidth = 0.1f, widthOfTabs = 10, heightOfTabs = 5, tabDepth = 11.0f; // Debug values
 
     // Create two variables to track the position of every piece we add
     private float positionX = 10;
     private float positionY = 10;
+
     // Create a variable to track the pieces created
     private int pieces = 0;
+    
     // Create a variable for the space between the pieces
     private int spaceBetween;
 
-    public Box(float width, float height, float depth, int numTabs, String engraving, String font, String fileName)
+    public Box(int boxType, float width, float height, float depth, int numTabs, String engraving, String font, String fileName)
     {
         if(width < MinimumSize || height < MinimumSize || depth < MinimumSize)
             throw new IllegalArgumentException("Width and Height must be at least " + MinimumSize);
+        this.boxType = boxType;
         this.width = width;
         this.height = height;
         this.depth = depth;
@@ -93,7 +96,7 @@ public class Box
 
     public Box build()
     {
-        return new Box(width, height, depth, numTabs, engraving, font, fileName);
+        return new Box(boxType, width, height, depth, numTabs, engraving, font, fileName);
     }
 
     public void print()
@@ -126,19 +129,23 @@ public class Box
             </svg>
             """;
         String svgContent = "";
-        // One base
-        svgContent += addBase();
-
+        
+        // Add the base
+        if(boxType == 1) // Based box
+            svgContent += addBase();
+        else if(boxType == 2) // Closed box (no base)
+            svgContent += addSide(true, true);
+        
         // Add the top
         svgContent += addTop();
 
         // Add four sides
-        svgContent += addSideA();
-        svgContent += addSideA();
-        svgContent += addSideB();
-        svgContent += addSideB();
+        svgContent += addSide(true, true);
+        svgContent += addSide(true, true);
+        svgContent += addSide(false, true);
+        svgContent += addSide(false, true);
         
-        // Creating the svg file
+        // Create the svg file
         String svgWhole = svgOpener + svgContent + svgCloser;
         File file = new File("exports/" + fileName + ".svg");
         try (FileWriter writer = new FileWriter(file)) 
@@ -150,6 +157,78 @@ public class Box
         {
             e.printStackTrace();
         }
+    }
+
+    private String addSide(boolean isSideA, boolean hasEngraving)
+    {
+        pieces += 1;
+
+        float dimension = isSideA ? width : height; // Choose whether the box uses width or height for its length value
+        String sideEngraving = hasEngraving ? engraving : ""; // Removes the engraving if hasEngraving is false
+
+        // Look for the center of the box
+        float xCenter = positionX + dimension / 2 + heightOfTabs;
+        float yCenter = positionY + height / 2 + heightOfTabs;
+
+        // Number of tabs per side
+        int nHorizontal = (int)(depth*2 / (2*widthOfTabs));
+        int nVertical = (int)(height*2 / (2*widthOfTabs));
+
+        // Caculate the space we need on the sides
+        float marginX = heightOfTabs + (depth*2 - (nHorizontal*widthOfTabs*2)) / 2;
+        float marginY = heightOfTabs + (height*2 - (nVertical*widthOfTabs*2)) / 2;
+        
+        if (!isSideA) { // This block is only for Side B
+            if(marginX - heightOfTabs >= 0)
+                marginX = marginX - heightOfTabs;
+        }
+
+        // Ensures an odd number of tabs
+        if(nHorizontal % 2 == 0)
+            nHorizontal -= 1;
+        if(nVertical % 2 == 0)
+            nVertical -= 1;
+
+        // Choose the respective side generator based off the isSideA bool
+        String pathData;
+        if(isSideA)
+        {
+            pathData = GenerateRectanglePathSideA(positionX, positionY, width, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
+        }
+        else
+        {
+            pathData = GenerateRectanglePathSideB(positionX, positionY, width, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
+        }
+
+        String svgContent = String.format("""
+            <path d="%s" stroke-width="%f" fill="none" stroke="black"/>
+            <text x="%.1f" y="%.1f" font-size="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
+            """, pathData, strokeWidth, xCenter, yCenter, fontSize, sideEngraving);
+
+        // Update the position of the next piece
+        if (pieces < 3) 
+        {
+            positionX += spaceBetween + dimension;
+        } 
+        else 
+        {
+            // This 'else' block has different logic for A and B
+            if (isSideA) {
+                float depthBase = depth + 2 * widthOfTabs;
+                if(depthBase > height)
+                    positionY += spaceBetween + depthBase;
+                else
+                    positionY += spaceBetween + height;
+            } 
+            else 
+            { // This is Side B's simpler logic
+                positionY += spaceBetween + height;
+            }
+            positionX = 10;
+            pieces = 0;
+        }
+
+        return svgContent;
     }
 
     private String addBase()
@@ -171,6 +250,7 @@ public class Box
         // --- Number of tabs per side ---
         int nHorizontal = (int)(width*2 / (2*widthOfTabs));
         int nVertical = (int)(depth*2 / (2*widthOfTabs));
+
         //caculate the space we need on the sides
         if(nHorizontal % 2 == 0)
             nHorizontal -= 1;
@@ -180,17 +260,9 @@ public class Box
 
         nHorizontal /= 2;
         
-        
         //caculate the space we need no the sides
         float marginX = (widthBase - (nHorizontal*widthOfTabs*2)+ widthOfTabs) /2;
         float marginY = (depthBase - (nVertical*widthOfTabs*2)+ widthOfTabs) /2;
-
-        //create the size of the original box just for refernce
-        //float originalBoxX = positionX + 2.5f*heightOfKnobs;
-        //float originalBoxY = positionY + 2.5f*heightOfKnobs;
-        //svgContent.append(basePrintSquares(originalBoxX, originalBoxY, width, depth));
-
-
 
         // --- Top edge (inside the base) ---
         float yTop = positionY + widthOfTabs;
@@ -236,98 +308,6 @@ public class Box
         return svgContent.toString();
     }
 
-    public String addSideA()
-    {
-        pieces += 1;
-        // Look for the center of the box
-        float xCenter = positionX + depth / 2 + heightOfTabs;
-        float yCenter = positionY + height / 2 + heightOfTabs; 
-
-        // --- Number of tabs per side ---
-        int nHorizontal = (int)(depth*2 / (2*widthOfTabs));
-        int nVertical = (int)(height*2 / (2*widthOfTabs));
-
-        // Caculate the space we need on the sides
-        float marginX = heightOfTabs+(depth*2 - (nHorizontal*widthOfTabs*2)) /2;
-        float marginY = heightOfTabs+(height*2 - (nVertical*widthOfTabs*2)) /2;
-        if(nHorizontal % 2 == 0)
-            nHorizontal -= 1;
-        if(nVertical % 2 == 0)
-            nVertical -= 1;
-        // System.out.println(marginX + " " + nHorizontal + " " + nVertical);
-
-        // String pathData = GenerateRectanglePath(positionX, positionY, width, height, tabDepth, numTabs);
-        String pathData = GenerateRectanglePathSideA(positionX, positionY, width, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
-
-        String svgContent = String.format("""
-                <path d="%s" stroke-width="%f" fill="none" stroke="black"/>
-                <text x="%.1f" y="%.1f" font-size="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
-                """, pathData, strokeWidth, xCenter, yCenter, fontSize, engraving);
-
-        float depthBase = depth + 2 * widthOfTabs;
-        
-        if (pieces < 3) 
-        {
-            positionX += spaceBetween + depth;
-        } 
-        else 
-        {
-            if(depthBase > height)
-                positionY += spaceBetween + depthBase;
-            else
-                positionY += spaceBetween + height;
-            positionX = 10;
-            pieces = 0;
-        }
-        return svgContent;
-    }
-
-    private String addSideB()
-    {
-        pieces += 1;
-        // Look for the center of the box
-        float xCenter = positionX + width / 2 + heightOfTabs;
-        float yCenter = positionY + height / 2 + heightOfTabs;
-
-        // --- Number of knobs per side ---
-        int nHorizontal = (int)(width*2 / (2*widthOfTabs));
-        int nVertical = (int)(height*2 / (2*widthOfTabs));
-        //caculate the space we need on the sides
-        float marginX = heightOfTabs+(width*2 - (nHorizontal*widthOfTabs*2)) /2;
-        float marginY = heightOfTabs+(height*2 - (nVertical*widthOfTabs*2)) /2;
-
-        if(marginX - heightOfTabs >= 0)
-            marginX = marginX - heightOfTabs;
-
-        if(nHorizontal % 2 == 0)
-            nHorizontal -= 1;
-        if(nVertical % 2 == 0)
-            nVertical -= 1;
-        //System.out.println(marginX + " " + nHorizontal + " " + nVertical);
-
-        //String pathData = GenerateRectanglePath(positionX, positionY, width, height, tabDepth, numTabs);
-        String pathData = GenerateRectanglePathSideB(positionX, positionY, width, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
-
-        //String pathData = GenerateRectanglePath(positionX, positionY, width, height, -tabDepth, numTabs);
-
-        String svgContent = String.format("""
-                <path d="%s" stroke-width="%f" fill="none" stroke="black"/>
-                <text x="%.1f" y="%.1f" font-size="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
-                """, pathData, strokeWidth, xCenter, yCenter, fontSize, engraving);
-
-        if (pieces < 3) 
-        {
-            positionX += spaceBetween + width;
-        } 
-        else 
-        {
-            positionY += spaceBetween + height;
-            positionX = 10;
-            pieces = 0;
-        }
-        return svgContent;
-    }
-
     private String addTop()
     {
         pieces += 1;
@@ -335,13 +315,13 @@ public class Box
         float xCenter = positionX + width / 2 + heightOfTabs;
         float yCenter = positionY + depth / 2 + heightOfTabs;
 
-        // --- Number of tabs per side ---
+        // Number of tabs per side
         int nHorizontal = (int)(width*2 / (2*widthOfTabs));
         int nVertical = (int)(depth*2 / (2*widthOfTabs));
-        //caculate the space we need on the sides
-        float marginX = (width*2 - (nHorizontal*widthOfTabs*2)) /2;
-        float marginY = (depth*2 - (nVertical*widthOfTabs*2)) /2;
-        
+
+        // Caculate the space we need on the sides
+        float marginX = (width*2 - (nHorizontal*widthOfTabs*2)) / 2;
+        float marginY = (depth*2 - (nVertical*widthOfTabs*2)) / 2;
 
         if(nHorizontal % 2 == 0)
             nHorizontal -= 1;
@@ -431,8 +411,7 @@ public class Box
         return path.toString(); // Return the constructed path
     }
 
-
-    //prints holes for the base plate
+    // Prints holes for the base plate
     private String basePrintSquares(float x, float y, float w, float h) {
         return String.format(
             "<rect x=\"%.2f\" y=\"%.2f\" width=\"%.2f\" height=\"%.2f\" fill=\"none\" stroke=\"black\" stroke-width=\"%.2f\" />\n",
@@ -440,6 +419,7 @@ public class Box
         );
     }
 
+    // Debug function for printing a single side
     public void printSingleSide() 
     {
         Locale.setDefault(Locale.US);
@@ -479,18 +459,6 @@ public class Box
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     //I created a function to test some things out
     public String GenerateRectanglePathSideA(float x, float y, float width, float height, float tabDepth, int nHorizontal, int nVertical, float marginX, float marginY)
@@ -578,16 +546,6 @@ public class Box
         return path.toString(); // Return the constructed path
     }
 
-
-
-
-
-
-
-
-
-
-
     //almost same function as above, the only thing I changed
     //were the direction of the tabs (I changed the minus sign)
     //and I reduced the width with two heightOfKnobs
@@ -615,7 +573,6 @@ public class Box
         }
         //end with a tap
         path.append(String.format("h %f ",marginX+seg)); //margin+seg
-        
 
         // Right edge
         //always start with a tab
@@ -650,7 +607,6 @@ public class Box
         }
         //add the margin at the end
         path.append(String.format("h %f ", -marginX));
-
 
         // Left edge
 

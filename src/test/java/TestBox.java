@@ -7,14 +7,14 @@ public class TestBox
     @Test
     public void testBoxCreation()
     {
-        Box box = new Box(30.0f, 30.0f, 30.0f, 0, "Test", "Arial", "TestBox");
+        Box box = new Box(1, 30.0f, 30.0f, 30.0f, 0, "Test", "Arial", "TestBox");
         assert box != null : "Box creation failed";
     }
 
     @Test
     public void testHeightInput()
     {
-        Box heightBox = new Box(50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox");
+        Box heightBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox");
         try
         {
             heightBox.setHeight(10); // Below minimum size
@@ -41,7 +41,7 @@ public class TestBox
     @Test
     public void testWidthInput()
     {
-        Box heightBox = new Box(50,50,50,5, "Test", "Arial", "TestBox");
+        Box heightBox = new Box(1, 50,50,50,5, "Test", "Arial", "TestBox");
         try
         {
             heightBox.setWidth(10); // Below minimum size
@@ -68,7 +68,7 @@ public class TestBox
     @Test
     public void testDepthInput()
     {
-        Box depthBox = new Box(50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox");
+        Box depthBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox");
         try
         {
             depthBox.setDepth(10); // Below minimum size
@@ -95,7 +95,7 @@ public class TestBox
     @Test
     public void testEngravingInput()
     {
-        Box engravingBox = new Box(50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox");
+        Box engravingBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox");
         
         // Test 1
         engravingBox.setEngraving("NE");
@@ -113,7 +113,7 @@ public class TestBox
     @Test
     public void testFontInput()
     {
-        Box fontBox = new Box(50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox");
+        Box fontBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox");
         
         // Test 1
         fontBox.setFont("Arial");
@@ -131,7 +131,7 @@ public class TestBox
     @Test
     public void testTabInput()
     {
-        Box tabBox = new Box(50, 50, 50, 5, "Test", "Arial", "TestBox");
+        Box tabBox = new Box(1, 50, 50, 50, 5, "Test", "Arial", "TestBox");
 
         // Test 1
         tabBox.setTabs(5);
@@ -149,7 +149,7 @@ public class TestBox
     @Test
     public void testFileName()
     {
-        Box fileBox = new Box(50, 50, 50, 5, "Test", "Arial", "TestBox");
+        Box fileBox = new Box(1, 50, 50, 50, 5, "Test", "Arial", "TestBox");
 
         // Test 1
         fileBox.setFileName("Test1");
@@ -163,5 +163,4 @@ public class TestBox
         fileBox.setFileName("Test3");
         assert fileBox.fileName.equals("Test3");
     }
-    
 }
