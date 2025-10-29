@@ -185,9 +185,15 @@ public class Box
 
         // Ensures an odd number of tabs
         if(nHorizontal % 2 == 0)
+        {
             nHorizontal -= 1;
+            xCenter -= heightOfTabs;
+        }
         if(nVertical % 2 == 0)
+        {
             nVertical -= 1;
+            yCenter -= heightOfTabs;
+        }
 
         // Choose the respective side generator based off the isSideA bool
         String pathData;
@@ -312,8 +318,6 @@ public class Box
     {
         pieces += 1;
         // Look for the center of the box
-        float xCenter = positionX + width / 2 + heightOfTabs;
-        float yCenter = positionY + depth / 2 + heightOfTabs;
 
         // Number of tabs per side
         int nHorizontal = (int)(width*2 / (2*widthOfTabs));
@@ -328,6 +332,9 @@ public class Box
         if(nVertical % 2 == 0)
             nVertical -= 1;
         //System.out.println(marginX + " " + nHorizontal + " " + nVertical);
+        // Look for the center of the box
+        float xCenter = positionX + ((nHorizontal*widthOfTabs)+marginX*2) / 2;
+        float yCenter = positionY + ((nVertical*widthOfTabs)+marginY*2) / 2;
 
         //String pathData = GenerateRectanglePath(positionX, positionY, width, height, -tabDepth, numTabs);
         String pathData = GenerateRectanglePathTop(positionX, positionY, width, depth, heightOfTabs, nHorizontal, nVertical, marginX, marginY);

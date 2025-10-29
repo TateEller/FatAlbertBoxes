@@ -2,6 +2,9 @@
 
 An alphebetized list of terms and acronyms for this project.
 
+**Baseplate**
+: The bottom piece of the box design. It is slightly larger than the other sides and includes holes instead of tabs for assembly.
+
 **Blueprint**
 : The shape created by the SVG file upon its creation.
 
@@ -22,3 +25,6 @@ An alphebetized list of terms and acronyms for this project.
 
 **Tabs**
 : The connecting "joints" that allow sides of a box to slide into each other
+
+**Height of Tabs**
+: The dimension of the connecting tabs that should equal the wood’s thickness for a tight, even joint.
