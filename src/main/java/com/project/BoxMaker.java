@@ -9,10 +9,11 @@ public class BoxMaker
     {
         Scanner scanner = new Scanner(System.in);
 
-        int measurement = MeasurementChooser(scanner); // Lets the user choose between different measurement units
+        int measurement = SystemChooser(scanner); // Lets the user choose between different measurement units
         int boxType = BoxChooser(scanner); // Chooses the type of box to be created
 
-        float conversion = switch (measurement) {
+        float conversion = switch (measurement) 
+        {
             case 1 -> 96f;
             case 2 -> 3.78f;
             default -> throw new IllegalArgumentException("Invalid measurement: " + measurement);
@@ -20,7 +21,7 @@ public class BoxMaker
 
         System.out.print("Enter the box's dimensions (width, height, depth): ");
 
-        String[] dimensions = scanner.nextLine().trim().split("\\s*,\\s*|\\s+"); // Split by comma or whitespace
+        String[] dimensions = MeasurementSelector(scanner);
         
         // Convert pixels to the selected measurement system
         float width = Float.parseFloat(dimensions[0]) * conversion;
@@ -58,7 +59,44 @@ public class BoxMaker
         }
     }
 
-    private static int MeasurementChooser(Scanner scanner)
+    private static String[] MeasurementSelector(Scanner scanner)
+    {
+        while (true)
+        {
+            String[] dimensions = scanner.nextLine().trim().split("\\s*,\\s*|\\s+"); // Split by comma or whitespace
+            
+            if(dimensions.length != 3)
+            {
+                System.err.println("That is an invalid input. Please enter length, width, height\n");
+                continue;
+            }
+
+            boolean allValid = true;
+            for (String num : dimensions) // Iterate through the array
+            {
+                try 
+                {
+                    Double.parseDouble(num);
+                } 
+                catch (Exception e) 
+                {
+                    allValid = false; // String is not a valid input
+                    break;
+                }
+            }
+            
+            if(allValid)
+            {
+                return dimensions;
+            }
+            else
+            {
+                System.err.println("That is not valid. Please enter length, width, height\n");
+            }
+        }
+    }
+
+    private static int SystemChooser(Scanner scanner)
     {
         while (true) 
         { 
@@ -86,7 +124,7 @@ public class BoxMaker
             tabNum = scanner.nextInt();
         } 
         catch (Exception e) {
-            System.err.println("Please use a valid whole number");
+            System.err.println("Please use a valid whole number.\n");
             scanner.nextLine();
             tabNum = TabChooser(scanner);
         }
@@ -104,7 +142,7 @@ public class BoxMaker
             Matcher matcher = pattern.matcher(engraving);
 
             if(engraving.length() > 2 || matcher.matches()) // Ensures that the engraving is two characters and has no numbers
-                System.err.println("Please use two characters");
+                System.err.println("Please use two letters\n");
             else
                 return engraving;
         }
