@@ -11,7 +11,9 @@ public class Box
     public int numTabs, boxType;
     public String engraving = "", font, fileName;
     public float fontSize;
-    private final float MinimumSize = 25.0f, strokeWidth = 0.1f * 96.0F, widthOfTabs = 10  * 96.0F, heightOfTabs = 5 * 96.0F, tabDepth = 11.0f; // Debug values
+    public float conversion;
+    private final float MinimumSize = 25.0f;
+    private float strokeWidth = 0.1f * conversion, widthOfTabs = 10, heightOfTabs = 5, tabDepth = 11.0f; // Debug values
 
     // Create two variables to track the position of every piece we add
     private float positionX = 10;
@@ -23,7 +25,7 @@ public class Box
     // Create a variable for the space between the pieces
     private int spaceBetween;
 
-    public Box(int boxType, float width, float height, float depth, int numTabs, String engraving, String font, String fileName)
+    public Box(int boxType, float width, float height, float depth, int numTabs, String engraving, String font, String fileName, float conversion)
     {
         if(width < MinimumSize || height < MinimumSize || depth < MinimumSize)
             throw new IllegalArgumentException("Width and Height must be at least " + MinimumSize);
@@ -37,6 +39,13 @@ public class Box
         this.font = font;
         this.fileName = fileName;
         this.spaceBetween = 5 + 2*(int)this.widthOfTabs;
+        this.conversion = conversion;
+
+        //measurements
+        strokeWidth = 0.1f * conversion;
+        widthOfTabs = 10 * conversion;
+        heightOfTabs = 5 * conversion;
+        tabDepth = 11.0f * conversion;
     }
 
     // Width Setter
@@ -94,9 +103,20 @@ public class Box
         //this.widthOfKnobs = 12;
     }
 
+    // Conversion Setter
+    public void setConversion(float conversion)
+    {
+        this.conversion = conversion;
+
+        strokeWidth = 0.1f * conversion;
+        widthOfTabs = 10 * conversion;
+        heightOfTabs = 5 * conversion;
+        tabDepth = 11.0f * conversion;
+    }
+
     public Box build()
     {
-        return new Box(boxType, width, height, depth, numTabs, engraving, font, fileName);
+        return new Box(boxType, width, height, depth, numTabs, engraving, font, fileName, conversion);
     }
 
     public void print()

@@ -36,7 +36,7 @@ public class BoxMaker
         String fileName = scanner.next();
 
         String font = ""; // Will need to get from user input later
-        Box test = new Box(boxType, width, height, depth, numTabs, engraving, font, fileName);
+        Box test = new Box(boxType, width, height, depth, numTabs, engraving, font, fileName, conversion);
         scanner.close();
         test.print();
     }
