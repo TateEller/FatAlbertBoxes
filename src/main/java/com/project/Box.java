@@ -11,7 +11,7 @@ public class Box
     public int numTabs;
     public String engraving, font, fileName;
     public float fontSize;
-    private final float MinimumSize = 25.0f, strokeWidth = 0.1f, widthOfTabs = 10, heightOfTabs = 5, tabDepth = 11.0f; // Debug values
+    private final float MinimumSize = 25.0f, strokeWidth = 0.1f * 96.0F, widthOfTabs = 10  * 96.0F, heightOfTabs = 5 * 96.0F, tabDepth = 11.0f; // Debug values
 
     // Create two variables to track the position of every piece we add
     private float positionX = 10;
@@ -117,7 +117,7 @@ public class Box
         // Break the string down
         String svgOpener = String.format("""
             <svg xmlns="http://www.w3.org/2000/svg" 
-            width="%fmm" height="%fmm"
+            width="%f" height="%f"
             viewBox="0 0 %f %f">
             <rect width="100%%" height="100%%" fill="white"/>
             """, file_width, file_height, file_width, file_height);

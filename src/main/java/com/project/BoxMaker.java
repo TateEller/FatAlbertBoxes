@@ -10,9 +10,12 @@ public class BoxMaker
 
         String[] dimensions = scanner.nextLine().trim().split("\\s*,\\s*|\\s+"); // Split by comma or whitespace
         float width = Float.parseFloat(dimensions[0]) * 96f, height = Float.parseFloat(dimensions[1]) * 96f, depth = Float.parseFloat(dimensions[2]) * 96f; // Convert inches to pixels
-
+        
         System.out.print("Enter number of tabs: ");
         int numTabs = scanner.nextInt();  //will need to check if input is correct type
+        //this is useless right now because the programm is generating the number of tabs
+        //automatically, the only thing would the user could change is the width of the 
+        //tabs
 
         System.out.print("Enter two letter engraving: ");
         String engraving = scanner.next();  //will need to check if input is correct type
