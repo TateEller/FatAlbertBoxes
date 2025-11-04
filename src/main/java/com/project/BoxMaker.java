@@ -84,6 +84,13 @@ public class BoxMaker
                     allValid = false; // String is not a valid input
                     break;
                 }
+
+                double value = Double.parseDouble(num); // parse the number
+                if (value < 30) {
+                    System.out.println("Error: Length must be at least 30.");
+                    allValid = false; // String is not a valid input
+                    break;
+                } 
             }
             
             if(allValid)
