@@ -161,16 +161,16 @@ public class Box
         if(boxType == 1) // Based box
             svgContent += addBase();
         else if(boxType == 2) // Closed box (no base)
-            svgContent += addSide(true, true);
+            svgContent += addSide(true, true, true);
         
         // Add the top
         svgContent += addTop();
 
         // Add four sides
-        svgContent += addSide(true, true);
-        svgContent += addSide(true, true);
-        svgContent += addSide(false, true);
-        svgContent += addSide(false, true);
+        svgContent += addSide(true, true, false);
+        svgContent += addSide(true, true, false);
+        svgContent += addSide(false, true, false);
+        svgContent += addSide(false, true ,false);
         
         // Create the svg file
         String svgWhole = svgOpener + svgContent + svgCloser;
@@ -186,7 +186,7 @@ public class Box
         }
     }
 
-    private String addSide(boolean isSideA, boolean hasEngraving)
+    private String addSide(boolean isSideA, boolean hasEngraving, boolean isBottom)
     {
         pieces += 1;
 
@@ -226,7 +226,7 @@ public class Box
         String pathData;
         if(isSideA)
         {
-            pathData = GenerateRectanglePathSideA(positionX, positionY, dimension, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
+            pathData = GenerateRectanglePathSideA(positionX, positionY, dimension, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY, isBottom);
         }
         else
         {
@@ -485,7 +485,7 @@ public class Box
     }
 
     //Generates a side with the right measurements
-    public String GenerateRectanglePathSideA(float x, float y, float width, float height, float tabDepth, int nHorizontal, int nVertical, float marginX, float marginY)
+    public String GenerateRectanglePathSideA(float x, float y, float width, float height, float tabDepth, int nHorizontal, int nVertical, float marginX, float marginY, boolean bottom)
     {
         StringBuilder path = new StringBuilder();
         path.append(String.format("M %f %f ", x, y)); // Start at top-left corner
@@ -538,7 +538,10 @@ public class Box
             } 
             else 
             {
-                path.append(String.format("v %f h %f v %f ", tabDepth, -seg, -tabDepth));
+                if(!bottom)
+                    path.append(String.format("v %f h %f v %f ", tabDepth, -seg, -tabDepth));
+                else
+                    path.append(String.format("v %f h %f v %f ", -tabDepth, -seg, tabDepth));
                 //System.out.println(i);
             }
         }
