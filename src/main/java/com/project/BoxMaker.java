@@ -28,7 +28,8 @@ public class BoxMaker
         float height = Float.parseFloat(dimensions[1]) * conversion;
         float depth = Float.parseFloat(dimensions[2]) * conversion;
 
-        int numTabs = TabChooser(scanner); // Lets the user choose the number of tabs to be used
+        //int numTabs = TabChooser(scanner); // Lets the user choose the number of tabs to be used
+        int numTabs = 0;
 
         String engraving = engravingWriter(scanner); // Lets the user choose any two alphebetical characters
 

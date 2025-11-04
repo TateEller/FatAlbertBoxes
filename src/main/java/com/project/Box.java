@@ -1,5 +1,6 @@
 package com.project;
 
+import java.io.Console;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class Box
     private int pieces = 0;
     
     // Create a variable for the space between the pieces
-    private int spaceBetween;
+    private float spaceBetween;
 
     public Box(int boxType, float width, float height, float depth, int numTabs, String engraving, String font, String fileName, float conversion)
     {
@@ -38,14 +39,16 @@ public class Box
         setFontSize(engraving);
         this.font = font;
         this.fileName = fileName;
-        this.spaceBetween = 5 + 2*(int)this.widthOfTabs;
         this.conversion = conversion;
+        this.spaceBetween = 5 + 2*this.widthOfTabs * conversion;
 
         //measurements
         strokeWidth = 0.1f * conversion;
         widthOfTabs = 10 * conversion;
         heightOfTabs = 5 * conversion;
         tabDepth = 11.0f * conversion;
+        positionX = 10 * conversion;
+        positionY = 10 * conversion;
     }
 
     // Width Setter
@@ -87,7 +90,8 @@ public class Box
     // Font Size Setter
     public void setFontSize(String engraving)
     {
-        this.fontSize = Math.min(this.width / engraving.length(), this.height);
+        float font_width = width < height ? width/2 : height/2;
+        this.fontSize = Math.min(font_width / engraving.length(), this.height);
     }
 
     // File Name Setter
@@ -112,6 +116,9 @@ public class Box
         widthOfTabs = 10 * conversion;
         heightOfTabs = 5 * conversion;
         tabDepth = 11.0f * conversion;
+        positionX = 10 * conversion;
+        positionY = 10 * conversion;
+        spaceBetween = 5 + 2*this.widthOfTabs * conversion;
     }
 
     public Box build()
@@ -122,14 +129,14 @@ public class Box
     public void print()
     {
         Locale.setDefault(Locale.US);   // My standard settings are European settings, so please dont remove
-        float padding = 10; // Create a variable for padding
+        float padding = 10 * conversion; // Create a variable for padding
         
         // Base slightly larger than the rest
-        float widthBase = width + 2 * widthOfTabs;
-        float depthBase = depth + 2 * widthOfTabs;
+        float widthBase = width + 5 * heightOfTabs;
+        float depthBase = depth + 5 * widthOfTabs;
 
         // Create a variable for the file_width and file_height
-        float file_width = widthBase + width * 3 + 2 * spaceBetween + 2 * padding;
+        float file_width = widthBase + 2*width + 2 * spaceBetween + 2 * padding;
         float file_height;
         if(depthBase > height)
         {
@@ -183,7 +190,7 @@ public class Box
     {
         pieces += 1;
 
-        float dimension = isSideA ? width : height; // Choose whether the box uses width or height for its length value
+        float dimension = isSideA ? width : depth; // Choose whether the box uses width or height for its length value
         String sideEngraving = hasEngraving ? engraving : ""; // Removes the engraving if hasEngraving is false
 
         // Look for the center of the box
@@ -191,11 +198,11 @@ public class Box
         float yCenter = positionY + height / 2 + heightOfTabs;
 
         // Number of tabs per side
-        int nHorizontal = (int)(depth*2 / (2*widthOfTabs));
+        int nHorizontal = (int)(dimension*2 / (2*widthOfTabs));
         int nVertical = (int)(height*2 / (2*widthOfTabs));
 
         // Caculate the space we need on the sides
-        float marginX = heightOfTabs + (depth*2 - (nHorizontal*widthOfTabs*2)) / 2;
+        float marginX = heightOfTabs + (dimension*2 - (nHorizontal*widthOfTabs*2)) / 2;
         float marginY = heightOfTabs + (height*2 - (nVertical*widthOfTabs*2)) / 2;
         
         if (!isSideA) { // This block is only for Side B
@@ -219,11 +226,11 @@ public class Box
         String pathData;
         if(isSideA)
         {
-            pathData = GenerateRectanglePathSideA(positionX, positionY, width, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
+            pathData = GenerateRectanglePathSideA(positionX, positionY, dimension, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
         }
         else
         {
-            pathData = GenerateRectanglePathSideB(positionX, positionY, width, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
+            pathData = GenerateRectanglePathSideB(positionX, positionY, dimension, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
         }
 
         String svgContent = String.format("""
@@ -239,18 +246,19 @@ public class Box
         else 
         {
             // This 'else' block has different logic for A and B
-            if (isSideA) {
+            if (isSideA) 
+            {
                 float depthBase = depth + 2 * widthOfTabs;
                 if(depthBase > height)
                     positionY += spaceBetween + depthBase;
                 else
                     positionY += spaceBetween + height;
-            } 
+            }
             else 
             { // This is Side B's simpler logic
                 positionY += spaceBetween + height;
             }
-            positionX = 10;
+            positionX = 10 * conversion;
             pieces = 0;
         }
 
@@ -324,12 +332,7 @@ public class Box
 
         // Move position for next piece
         if (pieces < 3)
-            positionX += spaceBetween + widthBase;
-        else {
-            positionY += spaceBetween + depthBase;
-            positionX = 10;
-            pieces = 0;
-        }
+            positionX += spaceBetween + widthBase - widthOfTabs;
 
         return svgContent.toString();
     }
@@ -366,13 +369,7 @@ public class Box
 
         if (pieces < 3) 
         {
-            positionX += 2*spaceBetween + width;
-        } 
-        else 
-        {
-            positionY += spaceBetween + height;
-            positionX = 10;
-            pieces = 0;
+            positionX += spaceBetween + width;
         }
         return svgContent;
     }
@@ -487,7 +484,7 @@ public class Box
         }
     }
 
-    //I created a function to test some things out
+    //Generates a side with the right measurements
     public String GenerateRectanglePathSideA(float x, float y, float width, float height, float tabDepth, int nHorizontal, int nVertical, float marginX, float marginY)
     {
         StringBuilder path = new StringBuilder();
