@@ -46,9 +46,11 @@ public class BoxMaker
     {
         while(true)
         {
-            System.out.print("Choose Box Type:\n" +
-            "[1] Based Box\n" +
-            "[2] Closed Box\n");
+            System.out.print("""
+                             Choose Box Type:
+                             [1] Based Box
+                             [2] Closed Box
+                             """);
 
             int chosenBox = scanner.nextInt();
             scanner.nextLine();
@@ -77,9 +79,9 @@ public class BoxMaker
             {
                 try 
                 {
-                    Double.parseDouble(num);
+                    Double.valueOf(num);
                 } 
-                catch (Exception e) 
+                catch (NumberFormatException e) 
                 {
                     allValid = false; // String is not a valid input
                     break;
@@ -108,9 +110,11 @@ public class BoxMaker
     {
         while (true) 
         { 
-            System.out.print("Choose Measurement System:\n" +
-            "[1] Inches\n" +
-            "[2] Millimeters\n");
+            System.out.print("""
+                             Choose Measurement System:
+                             [1] Inches
+                             [2] Millimeters
+                             """);
 
             int measurement = scanner.nextInt();
             scanner.nextLine(); // "Consume" enter key input
@@ -124,20 +128,24 @@ public class BoxMaker
 
     private static int TabChooser(Scanner scanner)
     {
-        System.out.print("Enter number of tabs: ");
+        while (true) 
+        { 
+            System.out.print("Enter number of tabs: ");
 
-        int tabNum;
-        try 
-        {
-            tabNum = scanner.nextInt();
-        } 
-        catch (Exception e) {
-            System.err.println("Please use a valid whole number.\n");
-            scanner.nextLine();
-            tabNum = TabChooser(scanner);
+            int tabNum;
+            try 
+            {
+                tabNum = scanner.nextInt();
+            } 
+            catch (Exception e) 
+            {
+                System.err.println("Please use a valid whole number.\n");
+                scanner.nextLine();
+                continue;
+            }
+            
+            return tabNum;
         }
-        
-        return tabNum;
     }
 
     private static String engravingWriter(Scanner scanner)
