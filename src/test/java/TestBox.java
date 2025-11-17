@@ -163,4 +163,97 @@ public class TestBox
         fileBox.setFileName("Test3");
         assert fileBox.fileName.equals("Test3");
     }
+
+    @Test
+    public void testBuildAndClone()
+    {
+        Box original = new Box(2, 80.0f, 60.0f, 40.0f, 3, "ENG", "Verdana", "Orig",1f);
+        Box built = original.build();
+
+        // Assert built object is not null
+        assert built != null : "Built box is null";
+
+        // Assert built has same dimensions
+        assert built.width == original.width : "Built width mismatch";
+        assert built.height == original.height : "Built height mismatch";
+
+        // Assert built is a different instance
+        assert built != original : "Build should return a new Box instance";
+    }
+
+    @Test
+    public void testConversionAndBuild()
+    {
+        Box convBox = new Box(1, 100.0f, 50.0f, 30.0f, 2, "E", "Arial", "Conv",1f);
+        convBox.setConversion(0.5f);
+
+        // Test conversion updated
+        assert convBox.conversion == 0.5f : "Conversion not updated";
+
+        Box b2 = convBox.build();
+        // Test built box preserved conversion
+        assert b2.conversion == 0.5f : "Built box conversion mismatch";
+
+        // Test built box preserved width
+        assert b2.width == convBox.width : "Built box width mismatch";
+
+        // Test built returns a new instance
+        assert b2 != convBox : "Build should return a new instance";
+    }
+
+    @Test
+    public void testGeneratePathNonEmpty()
+    {
+    Box pBox = new Box(1, 60.0f, 40.0f, 30.0f, 4, "", "Arial", "PathTest",1f);
+        String path = pBox.GenerateRectanglePath(0f, 0f, 60f, 40f, 4.0f, 4);
+
+        // Test non-null
+        assert path != null : "Path should not be null";
+
+        // Test not empty
+        assert path.length() > 0 : "Path should not be empty";
+
+        // Test contains move/close commands (basic sanity)
+        assert path.contains("M ") || path.contains("Z") : "Path seems malformed";
+
+        // Test contains at least one space (simple structural check)
+        assert path.contains(" ") : "Path missing expected spacing";
+    }
+
+    @Test
+    public void testEngravingFontSize()
+    {
+        Box efBox = new Box(1, 120.0f, 60.0f, 40.0f, 1, "", "Arial", "EFTest",1f);
+
+        efBox.setEngraving("Hello");
+        assert efBox.engraving.equals("Hello") : "Engraving not set";
+
+        efBox.setFontSize(efBox.engraving);
+        // Font size should be positive
+        assert efBox.fontSize > 0 : "Font size should be greater than zero";
+
+        // Font size should not exceed box height
+        assert efBox.fontSize <= efBox.height : "Font size should not exceed box height";
+
+        // Setting a different engraving updates engraving
+        efBox.setEngraving("Hi");
+        assert efBox.engraving.equals("Hi") : "Engraving did not update";
+    }
+
+    @Test
+    public void testFileNameTabsAndBuild()
+    {
+        Box ftBox = new Box(2, 90.0f, 70.0f, 50.0f, 0, "", "Arial", "Start",1f);
+
+        ftBox.setFileName("MyBox");
+        assert ftBox.fileName.equals("MyBox") : "File name not set";
+
+        ftBox.setTabs(7);
+        assert ftBox.numTabs == 7 : "Tabs not set correctly";
+
+        Box clone = ftBox.build();
+        assert clone.fileName.equals("MyBox") : "Built fileName mismatch";
+
+        assert clone.numTabs == 7 : "Built numTabs mismatch";
+    }
 }
