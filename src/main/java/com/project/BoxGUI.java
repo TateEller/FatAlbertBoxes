@@ -5,9 +5,11 @@ import java.util.concurrent.BrokenBarrierException;
 import javafx.application.*;
 import javafx.event.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.*;
 
 public class BoxGUI extends Application
@@ -97,12 +99,14 @@ public class BoxGUI extends Application
         //Buttons for generating and downloading svg
         Button generateButton = new Button("Generate");
         generateButton.setOnAction(e -> {
+            
+        });
+        Button downloadButton = new Button("Download");
+        downloadButton.setOnAction(e -> {
             System.err.println("Generate " + fileInput.getText());
             generateSVG(Float.parseFloat(widthInput.getText()), Float.parseFloat(heightInput.getText()), 
                 Float.parseFloat(depthInput.getText()), engraveInput.getText(), fileInput.getText());
         });
-        Button downloadButton = new Button("Download");
-        downloadButton.setOnAction(e -> System.err.println("Download Button"));
 
         HBox bottomButtons = new HBox(10);
         bottomButtons.setPadding(new Insets(10,10,10,10));
@@ -119,31 +123,56 @@ public class BoxGUI extends Application
         window.show();
     }
 
-    private boolean isInt(TextField input, String message){
+    private boolean isInt(TextField input, String value){
         try{
-            int number = Integer.parseInt(message);
-            System.out.println("Number is " + number);
+            Integer.parseInt(value);
             return true;
         }catch(NumberFormatException e){
-            System.out.println("Error: " + message + " is not a number");
+            input.setStyle("-fx-control-inner-background: #ff9999;");
+            errorMessage("ERROR", "'" + value + "' is not a integer.");
             return false;
         }
     }
 
-    private boolean isFloat(TextField input, String message){
+    private boolean isFloat(TextField input, String value){
         try{
-            float number = Float.parseFloat(message);
-            System.out.println("Float is " + number);
+            Float.parseFloat(value);
             return true;
         }catch(NumberFormatException e){
-            System.out.println("Error: " + message + " is not a float");
+            input.setStyle("-fx-control-inner-background: #ff9999;");
+            errorMessage("ERROR", "'" + value + "' is not a float.");
             return false;
         }
+    }
+
+    private void errorMessage(String title, String message){
+        Stage window = new Stage();
+
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle(title);
+        window.setMinWidth(250);
+        window.setMinHeight(100);
+
+        Label label = new Label();
+        label.setText(message);
+        Button closeButton = new Button("Ok");
+        closeButton.setOnAction(e -> window.close());
+
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, closeButton);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(layout);
+        window.setScene(scene);
+        window.showAndWait();
     }
 
     private void generateSVG(float width, float height, float depth, String engraving, String fileName){
+
         Box guiBox = new Box(boxType,width,height,depth,10,engraving,"Arial",fileName,1);
         guiBox.print();
     }
+
+
 
 }
