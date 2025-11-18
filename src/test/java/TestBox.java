@@ -165,6 +165,7 @@ public class TestBox
     }
 
     @Test
+<<<<<<< Updated upstream
     public void testBuildAndClone()
     {
         Box original = new Box(2, 80.0f, 60.0f, 40.0f, 3, "ENG", "Verdana", "Orig",1f);
@@ -255,5 +256,58 @@ public class TestBox
         assert clone.fileName.equals("MyBox") : "Built fileName mismatch";
 
         assert clone.numTabs == 7 : "Built numTabs mismatch";
+=======
+    public void testMeasurementConversion()
+    {
+        float pixelsToInches = 1 / 96f;
+        float pixelsToCm = 1 / 3.78f;
+
+        // Test 1
+        float inches = 192 * pixelsToInches; // 2 inches
+        assert Math.abs(inches - 2.0f) < 0.0001 : "Pixel to inch conversion failed";
+
+        // Test 2
+        float cm = 378 * pixelsToCm; // 100 cm
+        assert Math.abs(cm - 100.0f) < 0.0001 : "Pixel to cm conversion failed";
+
+        // Test 3
+        float inches2 = 96 * pixelsToInches; // 1 inch
+        assert Math.abs(inches2 - 1.0f) < 0.0001 : "Pixel to inch conversion failed";
+    }
+
+    @Test
+    public void testBoxTypeSelection()
+    {
+        Box box1 = new Box(1, 50, 50, 50, 5, "Test", "Arial", "TestBox1",1f);
+        assert box1.boxType == 1 : "Box type 1 selection failed";
+
+        Box box2 = new Box(2, 50, 50, 50, 5, "Test", "Arial", "TestBox2",1f);
+        assert box2.boxType == 2 : "Box type 2 selection failed";
+    }
+
+    @Test
+    public void testCardBoxCreation()
+    {
+        com.project.CardBox cardBox = new com.project.CardBox(30.0f, 30.0f, 30.0f, "CB", "Arial", "TestCardBox", 1f);
+        assert cardBox != null : "CardBox creation failed";
+    }
+
+    @Test
+    public void testCardBoxEngravingInput()
+    {
+        com.project.CardBox engravingBox = new com.project.CardBox(50.0f, 50.0f, 50.0f, "Test", "Arial", "TestCardBox",1f);
+        
+        // Test 1
+        engravingBox.setEngraving("NE");
+        assert engravingBox.engraving.equals("NE") : "Engraving not set correctly";
+
+        // Test 2
+        engravingBox.setEngraving("HW");
+        assert engravingBox.engraving.equals("HW") : "Engraving not set correctly";
+
+        // Test 3
+        engravingBox.setEngraving("LE");
+        assert engravingBox.engraving.equals("LE") : "Engraving not set correctly";
+>>>>>>> Stashed changes
     }
 }

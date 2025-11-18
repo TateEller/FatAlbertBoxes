@@ -37,9 +37,18 @@ public class BoxMaker
         String fileName = scanner.next();
 
         String font = ""; // Will need to get from user input later
-        Box test = new Box(boxType, width, height, depth, numTabs, engraving, font, fileName, conversion);
-        scanner.close();
-        test.print();
+        if(boxType < 2)
+        {
+            Box test = new Box(boxType, width, height, depth, numTabs, engraving, font, fileName, conversion);
+            scanner.close();
+            test.print();
+        }
+        else if(boxType == 3)
+        {
+            CardBox test = new CardBox(width, height, depth, engraving, font, fileName, conversion);
+            scanner.close();
+            test.print();
+        }
     }
 
     private static int BoxChooser(Scanner scanner)
@@ -50,12 +59,13 @@ public class BoxMaker
                              Choose Box Type:
                              [1] Based Box
                              [2] Closed Box
+                             [3] Card Box
                              """);
 
             int chosenBox = scanner.nextInt();
             scanner.nextLine();
 
-            if(chosenBox > 2)
+            if(chosenBox > 3)
                 System.err.println("Please use a valid number");
             else
                 return chosenBox;
