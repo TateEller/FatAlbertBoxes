@@ -7,14 +7,14 @@ public class TestBox
     @Test
     public void testBoxCreation()
     {
-        Box box = new Box(1, 30.0f, 30.0f, 30.0f, 0, "Test", "Arial", "TestBox",1f);
+        Box box = new Box(1, 30.0f, 30.0f, 30.0f, 0, "Test", "Arial", 4, "TestBox",1f);
         assert box != null : "Box creation failed";
     }
 
     @Test
     public void testHeightInput()
     {
-        Box heightBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox",1f);
+        Box heightBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",1f);
         try
         {
             heightBox.setHeight(10); // Below minimum size
@@ -41,7 +41,7 @@ public class TestBox
     @Test
     public void testWidthInput()
     {
-        Box heightBox = new Box(1, 50,50,50,5, "Test", "Arial", "TestBox",1f);
+        Box heightBox = new Box(1, 50,50,50,5, "Test", "Arial", 4, "TestBox",1f);
         try
         {
             heightBox.setWidth(10); // Below minimum size
@@ -68,7 +68,7 @@ public class TestBox
     @Test
     public void testDepthInput()
     {
-        Box depthBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox",1f);
+        Box depthBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",1f);
         try
         {
             depthBox.setDepth(10); // Below minimum size
@@ -95,7 +95,7 @@ public class TestBox
     @Test
     public void testEngravingInput()
     {
-        Box engravingBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox",1f);
+        Box engravingBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",1f);
         
         // Test 1
         engravingBox.setEngraving("NE");
@@ -113,7 +113,7 @@ public class TestBox
     @Test
     public void testFontInput()
     {
-        Box fontBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", "TestBox",1f);
+        Box fontBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",1f);
         
         // Test 1
         fontBox.setFont("Arial");
@@ -131,7 +131,7 @@ public class TestBox
     @Test
     public void testTabInput()
     {
-        Box tabBox = new Box(1, 50, 50, 50, 5, "Test", "Arial", "TestBox",1f);
+        Box tabBox = new Box(1, 50, 50, 50, 5, "Test", "Arial", 4, "TestBox",1f);
 
         // Test 1
         tabBox.setTabs(5);
@@ -149,7 +149,7 @@ public class TestBox
     @Test
     public void testFileName()
     {
-        Box fileBox = new Box(1, 50, 50, 50, 5, "Test", "Arial", "TestBox",1f);
+        Box fileBox = new Box(1, 50, 50, 50, 5, "Test", "Arial", 4, "TestBox",1f);
 
         // Test 1
         fileBox.setFileName("Test1");
@@ -167,7 +167,7 @@ public class TestBox
     @Test
     public void testBuildAndClone()
     {
-        Box original = new Box(2, 80.0f, 60.0f, 40.0f, 3, "ENG", "Verdana", "Orig",1f);
+        Box original = new Box(2, 80.0f, 60.0f, 40.0f, 3, "ENG", "Verdana", 4, "Orig",1f);
         Box built = original.build();
 
         // Assert built object is not null
@@ -184,7 +184,7 @@ public class TestBox
     @Test
     public void testConversionAndBuild()
     {
-        Box convBox = new Box(1, 100.0f, 50.0f, 30.0f, 2, "E", "Arial", "Conv",1f);
+        Box convBox = new Box(1, 100.0f, 50.0f, 30.0f, 2, "E", "Arial", 4, "Conv",1f);
         convBox.setConversion(0.5f);
 
         // Test conversion updated
@@ -204,7 +204,7 @@ public class TestBox
     @Test
     public void testGeneratePathNonEmpty()
     {
-    Box pBox = new Box(1, 60.0f, 40.0f, 30.0f, 4, "", "Arial", "PathTest",1f);
+    Box pBox = new Box(1, 60.0f, 40.0f, 30.0f, 4, "", "Arial", 4,"PathTest",1f);
         String path = pBox.GenerateRectanglePath(0f, 0f, 60f, 40f, 4.0f, 4);
 
         // Test non-null
@@ -223,7 +223,7 @@ public class TestBox
     @Test
     public void testEngravingFontSize()
     {
-        Box efBox = new Box(1, 120.0f, 60.0f, 40.0f, 1, "", "Arial", "EFTest",1f);
+        Box efBox = new Box(1, 120.0f, 60.0f, 40.0f, 1, "", "Arial", 4,"EFTest",1f);
 
         efBox.setEngraving("Hello");
         assert efBox.engraving.equals("Hello") : "Engraving not set";
@@ -243,7 +243,7 @@ public class TestBox
     @Test
     public void testFileNameTabsAndBuild()
     {
-        Box ftBox = new Box(2, 90.0f, 70.0f, 50.0f, 0, "", "Arial", "Start",1f);
+        Box ftBox = new Box(2, 90.0f, 70.0f, 50.0f, 0, "", "Arial", 4,"Start",1f);
 
         ftBox.setFileName("MyBox");
         assert ftBox.fileName.equals("MyBox") : "File name not set";
@@ -279,10 +279,10 @@ public class TestBox
     @Test
     public void testBoxTypeSelection()
     {
-        Box box1 = new Box(1, 50, 50, 50, 5, "Test", "Arial", "TestBox1",1f);
+        Box box1 = new Box(1, 50, 50, 50, 5, "Test", "Arial", 4,"TestBox1",1f);
         assert box1.boxType == 1 : "Box type 1 selection failed";
 
-        Box box2 = new Box(2, 50, 50, 50, 5, "Test", "Arial", "TestBox2",1f);
+        Box box2 = new Box(2, 50, 50, 50, 5, "Test", "Arial", 4,"TestBox2",1f);
         assert box2.boxType == 2 : "Box type 2 selection failed";
     }
 

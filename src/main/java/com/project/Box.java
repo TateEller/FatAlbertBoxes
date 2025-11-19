@@ -12,6 +12,7 @@ public class Box
     public int numTabs, boxType;
     public String engraving = "", font, fileName;
     public float fontSize;
+    public int engSides;
     public float conversion;
     private final float MinimumSize = 25.0f;
     private float strokeWidth = 0.1f * conversion, widthOfTabs = 10, heightOfTabs = 5, tabDepth = 11.0f; // Debug values
@@ -26,7 +27,7 @@ public class Box
     // Create a variable for the space between the pieces
     private float spaceBetween;
 
-    public Box(int boxType, float width, float height, float depth, int numTabs, String engraving, String font, String fileName, float conversion)
+    public Box(int boxType, float width, float height, float depth, int numTabs, String engraving, String font, int engSides, String fileName, float conversion)
     {
         if(width < MinimumSize || height < MinimumSize || depth < MinimumSize)
             throw new IllegalArgumentException("Width and Height must be at least " + MinimumSize);
@@ -37,6 +38,7 @@ public class Box
         this.numTabs = numTabs;
         this.engraving = engraving;
         setFontSize(engraving);
+        this.engSides = engSides;
         this.font = font;
         this.fileName = fileName;
         this.conversion = conversion;
@@ -94,6 +96,11 @@ public class Box
         this.fontSize = Math.min(font_width / engraving.length(), this.height);
     }
 
+    public void setEngravingSides(int engSides)
+    {
+        this.engSides = engSides;
+    }
+
     // File Name Setter
     public void setFileName(String fileName)
     {
@@ -123,7 +130,7 @@ public class Box
 
     public Box build()
     {
-        return new Box(boxType, width, height, depth, numTabs, engraving, font, fileName, conversion);
+        return new Box(boxType, width, height, depth, numTabs, engraving, font, engSides, fileName, conversion);
     }
 
     public void print()
@@ -161,16 +168,39 @@ public class Box
         if(boxType == 1) // Based box
             svgContent += addBase();
         else if(boxType == 2) // Closed box (no base)
-            svgContent += addSide(true, true, true);
+            svgContent += addSide(true, false, true);
         
         // Add the top
         svgContent += addTop();
 
         // Add four sides
-        svgContent += addSide(true, true, false);
-        svgContent += addSide(true, true, false);
-        svgContent += addSide(false, true, false);
-        svgContent += addSide(false, true ,false);
+        switch (engSides) {
+            case 1:
+                svgContent += addSide(true, true, false);
+                svgContent += addSide(true, false, false);
+                svgContent += addSide(false, false, false);
+                svgContent += addSide(false, false ,false);
+                break;
+            case 2:
+                svgContent += addSide(true, true, false);
+                svgContent += addSide(true, true, false);
+                svgContent += addSide(false, false, false);
+                svgContent += addSide(false, false ,false);
+                break;
+            case 3:
+                svgContent += addSide(true, true, false);
+                svgContent += addSide(true, true, false);
+                svgContent += addSide(false, true, false);
+                svgContent += addSide(false, false ,false);
+                break;
+            case 4:
+            default:
+                svgContent += addSide(true, true, false);
+                svgContent += addSide(true, true, false);
+                svgContent += addSide(false, true, false);
+                svgContent += addSide(false, true ,false);
+                break;
+        }
         
         // Create the svg file
         String svgWhole = svgOpener + svgContent + svgCloser;

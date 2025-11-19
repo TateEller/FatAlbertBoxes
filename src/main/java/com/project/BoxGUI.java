@@ -1,6 +1,8 @@
 package com.project;
 
 import java.util.concurrent.BrokenBarrierException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.application.*;
 import javafx.event.*;
@@ -8,6 +10,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.*;
@@ -21,6 +25,7 @@ public class BoxGUI extends Application
     int boxType = 1;
     float width, height, depth = 100;
     float numTabs;  //I'm not sure if we need this still or if the tab count is auto calculated
+    int engravingSide = 1;
     String engraving = "FA";
     String font = "";   //I don't think font is needed either. It doesnt seem to be assigned anywhere
     String fileName = "Untitled";
@@ -59,48 +64,140 @@ public class BoxGUI extends Application
         GridPane.setConstraints(widthLabel, 0, 0);
         TextField widthInput = new TextField("100");
         GridPane.setConstraints(widthInput, 1, 0);
+        widthInput.setId("Width Input");
+        widthInput.setOnMouseClicked(e -> {     //reset color on click
+            widthInput.setStyle("-fx-control-inner-background: #ffffffff;");
+        });
+        final String[] lastValue = {widthInput.getText()};
+        widthInput.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if(!newFocus){  //When user clicks off box
+                String current = widthInput.getText();
+                
+                if(!current.equals(lastValue[0])){  //If value has changed
+                    System.out.println("New width");
+                    isFloat(widthInput, current);      //Check if it is a valid float
+                    //check if it is in min/max range
+                }   
+            }
+        });
+        
 
         //Height input
         Label heightLabel = new Label("Height:");
         GridPane.setConstraints(heightLabel, 0, 1);
         TextField heightInput = new TextField("100");
         GridPane.setConstraints(heightInput, 1, 1);
+        heightInput.setId("Height Input");
+        heightInput.setOnMouseClicked(e -> {
+            heightInput.setStyle("-fx-control-inner-background: #ffffffff;");
+        });
+        heightInput.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if(!newFocus){  //When user clicks off box
+                String current = heightInput.getText();
+                
+                if(!current.equals(lastValue[0])){  //If value has changed
+                    System.out.println("New height");
+                    isFloat(heightInput, current);      //Check if it is a valid float
+                    //check if it is in min/max range
+                }   
+            }
+        });
 
         //Depth input
         Label depthLabel = new Label("Depth:");
         GridPane.setConstraints(depthLabel, 0, 2);
         TextField depthInput = new TextField("100");
         GridPane.setConstraints(depthInput, 1, 2);
+        depthInput.setId("Depth Input");
+        depthInput.setOnMouseClicked(e -> {
+            depthInput.setStyle("-fx-control-inner-background: #ffffffff;");
+        });
+        depthInput.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if(!newFocus){  //When user clicks off box
+                String current = depthInput.getText();
+                
+                if(!current.equals(lastValue[0])){  //If value has changed
+                    System.out.println("New depth");
+                    isFloat(depthInput, current);      //Check if it is a valid float
+                    //check if it is in min/max range
+                }   
+            }
+        });
 
         //Engraving input
         Label engraveLabel = new Label("Engraving:");
         GridPane.setConstraints(engraveLabel, 0, 4);
         TextField engraveInput = new TextField("FA");
         GridPane.setConstraints(engraveInput, 1, 4);
+        engraveInput.setId("Engraving Input");
+        engraveInput.setOnMouseClicked(e -> {
+            engraveInput.setStyle("-fx-control-inner-background: #ffffffff;");
+        });
+        engraveInput.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if(!newFocus){  //When user clicks off box
+                String current = engraveInput.getText();
+                
+                if(!current.equals(lastValue[0])){  //If value has changed
+                    System.out.println("New engraving");
+                    checkEngravement(engraveInput, current);      //Check if it is a valid value
+                }   
+            }
+        });
 
         //Engraving Side input
         Label sideLabel = new Label("Engrave on side:");
         GridPane.setConstraints(sideLabel, 0, 5);
         ChoiceBox<String> sideChoice = new ChoiceBox<>();
-        sideChoice.getItems().add("One side, front");   //add one item to dropdown menu
-        sideChoice.getItems().addAll("All sides, no top", "All sides, with top");   //add multiple items to dropdown menu
+        sideChoice.getItems().add("One side, width side");   //add one item to dropdown menu
+        sideChoice.getItems().addAll("Two sides, opposite sides", "Three sides", "All four sides");   //add multiple items to dropdown menu
         sideChoice.setValue("One side, front"); //set default value
         GridPane.setConstraints(sideChoice, 1, 5);
+        //Set engravingSide variable
+        sideChoice.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newvalue) -> {
+            switch(newvalue){
+                case "One side, width side":
+                    engravingSide = 1;
+                    break;
+                case "Two sides, opposite sides":
+                    engravingSide = 2;
+                    break;
+                case "Three sides":
+                    engravingSide = 3;
+                    break;
+                case "All four sides":
+                    engravingSide = 4;
+                    break;
+            }
+        });
 
         //FileName input
         Label fileLabel = new Label("File name:");
         GridPane.setConstraints(fileLabel, 0, 6);
         TextField fileInput = new TextField("Untitled");
         GridPane.setConstraints(fileInput, 1, 6);
+        fileInput.setId("File Name Input");
 
         grid.getChildren().addAll(widthLabel, widthInput, heightLabel, heightInput, depthLabel, 
             depthInput, engraveLabel, engraveInput, sideLabel, sideChoice, fileLabel, fileInput);
 
         //Buttons for generating and downloading svg
-        Button generateButton = new Button("Generate");
-        generateButton.setOnAction(e -> {
+        /*
+        Button previewButton = new Button("Preview");
+        previewButton.setOnAction(e -> {
+            Boolean correctInput = true;
+            if(!isFloat(widthInput, widthInput.getText()))
+                correctInput = false;
+            if(!isFloat(heightInput, heightInput.getText()))
+                correctInput = false;
+            if(!isFloat(depthInput, depthInput.getText()))
+                correctInput = false;
             
-        });
+            if(!checkEngravement(engraveInput, engraveInput.getText()))
+                correctInput = false;
+            //check fileName
+
+            //if correct generate preview
+        });  */
         Button downloadButton = new Button("Download");
         downloadButton.setOnAction(e -> {
             System.err.println("Generate " + fileInput.getText());
@@ -110,12 +207,22 @@ public class BoxGUI extends Application
 
         HBox bottomButtons = new HBox(10);
         bottomButtons.setPadding(new Insets(10,10,10,10));
-        bottomButtons.getChildren().addAll(generateButton,downloadButton);
+        bottomButtons.getChildren().addAll(downloadButton); //add preview button
 
-        //Set final layout
+        //Set left layout
         VBox layout = new VBox(10);
         layout.setPadding(new Insets (10,10,10,10));
         layout.getChildren().addAll(topButtons, grid, bottomButtons);
+
+        /*        JavaFx doesn't support diplaying image as SVG
+        //Image preview
+        Image image = new Image("file:exports/preview.svg"); 
+        ImageView view = new ImageView(image);
+
+        //set final layout
+        HBox screen = new HBox(10);
+        screen.setPadding(new Insets(10,10,10,10));
+        screen.getChildren().addAll(layout, view);  */
 
         //Create scene
         Scene scene = new Scene(layout, 400, 400);
@@ -124,6 +231,8 @@ public class BoxGUI extends Application
     }
 
     private boolean isInt(TextField input, String value){
+        if(!hasInput(input, value)) return false;
+        
         try{
             Integer.parseInt(value);
             return true;
@@ -135,6 +244,8 @@ public class BoxGUI extends Application
     }
 
     private boolean isFloat(TextField input, String value){
+        if(!hasInput(input, value)) return false;
+        
         try{
             Float.parseFloat(value);
             return true;
@@ -143,6 +254,30 @@ public class BoxGUI extends Application
             errorMessage("ERROR", "'" + value + "' is not a float.");
             return false;
         }
+    }
+
+    private boolean checkEngravement(TextField input, String value){
+        if(!hasInput(input, value)) return false;
+
+        Pattern pattern = Pattern.compile(".*\\d.*");
+        Matcher matcher = pattern.matcher(value);
+
+        if(value.length() > 2 || matcher.matches()){    // Ensures that the engraving is two characters and has no numbers
+            input.setStyle("-fx-control-inner-background: #ff9999;");
+            errorMessage("ERROR", "'" + value + "' can only be 2 letters.");
+            return false;
+        } 
+        else
+            return true;
+    }
+
+    private boolean hasInput(TextField input, String value){
+            if(value.isEmpty()){
+                input.setStyle("-fx-control-inner-background: #ff9999;");
+                errorMessage("ERROR", "'" + input.getId() +"' can not be empty.");
+                return false;
+            }
+            else return true;
     }
 
     private void errorMessage(String title, String message){
@@ -169,7 +304,7 @@ public class BoxGUI extends Application
 
     private void generateSVG(float width, float height, float depth, String engraving, String fileName){
 
-        Box guiBox = new Box(boxType,width,height,depth,10,engraving,"Arial",fileName,1);
+        Box guiBox = new Box(boxType,width,height,depth,10,engraving,"Arial",engravingSide,fileName,1);
         guiBox.print();
     }
 
