@@ -256,7 +256,7 @@ public class TestBox
 
         assert clone.numTabs == 7 : "Built numTabs mismatch";
     }
-
+    
     @Test
     public void testMeasurementConversion()
     {
