@@ -165,9 +165,6 @@ public class TestBox
     }
 
     @Test
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     public void testBuildAndClone()
     {
         Box original = new Box(2, 80.0f, 60.0f, 40.0f, 3, "ENG", "Verdana", "Orig",1f);
@@ -258,11 +255,9 @@ public class TestBox
         assert clone.fileName.equals("MyBox") : "Built fileName mismatch";
 
         assert clone.numTabs == 7 : "Built numTabs mismatch";
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+    }
+
+    @Test
     public void testMeasurementConversion()
     {
         float pixelsToInches = 1 / 96f;
@@ -314,12 +309,5 @@ public class TestBox
         // Test 3
         engravingBox.setEngraving("LE");
         assert engravingBox.engraving.equals("LE") : "Engraving not set correctly";
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
 }
