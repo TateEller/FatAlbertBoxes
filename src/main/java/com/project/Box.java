@@ -140,17 +140,13 @@ public class Box
         
         // Base slightly larger than the rest
         float widthBase = width + 5 * heightOfTabs;
-        float depthBase = depth + 5 * widthOfTabs;
+        float depthBase = depth + 5 * heightOfTabs;
+        float heightBase = height + 5 * heightOfTabs;
 
         // Create a variable for the file_width and file_height
-        float file_width = widthBase + 2*width + 2 * spaceBetween + 2 * padding;
-        float file_height;
-        if(depthBase > height)
-        {
-            file_height = depthBase * 2 + spaceBetween + 2 * padding;
-        }
-        else
-            file_height = height * 2 + spaceBetween + 2 * padding;
+        float file_width = Math.max(3*widthBase, widthBase + 2*depthBase) + 2 * padding;
+        float file_height = Math.max(2*heightBase, depthBase + heightBase) + 4 * padding;
+            
         // Break the string down
         String svgOpener = String.format("""
             <svg xmlns="http://www.w3.org/2000/svg" 
@@ -168,12 +164,12 @@ public class Box
         if(boxType == 1) // Based box
             svgContent += addBase();
         else if(boxType == 2) // Closed box (no base)
-            svgContent += addSide(true, false, true);
+            svgContent += addSide(true, false, true); // Add bottom side without engraving
         
         // Add the top
         svgContent += addTop();
 
-        // Add four sides
+        // Add four sides with engraving switch/case
         switch (engSides) {
             case 1:
                 svgContent += addSide(true, true, false);
@@ -220,20 +216,33 @@ public class Box
     {
         pieces += 1;
 
-        float dimension = isSideA ? width : depth; // Choose whether the box uses width or height for its length value
+        float dimension;
+        float side;
+        if(isBottom)
+        {
+            // Bottom always uses width × depth no matter what isSideA is
+            dimension = width;
+            side = depth;
+        }
+        else
+        {
+            // Normal sides
+            dimension = isSideA ? width : depth;
+            side = height;
+        }
         String sideEngraving = hasEngraving ? engraving : ""; // Removes the engraving if hasEngraving is false
 
         // Look for the center of the box
         float xCenter = positionX + dimension / 2 + heightOfTabs;
-        float yCenter = positionY + height / 2 + heightOfTabs;
+        float yCenter = positionY + side / 2 + heightOfTabs;
 
         // Number of tabs per side
         int nHorizontal = (int)(dimension*2 / (2*widthOfTabs));
-        int nVertical = (int)(height*2 / (2*widthOfTabs));
+        int nVertical = (int)(side*2 / (2*widthOfTabs));
 
         // Caculate the space we need on the sides
         float marginX = heightOfTabs + (dimension*2 - (nHorizontal*widthOfTabs*2)) / 2;
-        float marginY = heightOfTabs + (height*2 - (nVertical*widthOfTabs*2)) / 2;
+        float marginY = heightOfTabs + (side*2 - (nVertical*widthOfTabs*2)) / 2;
         
         if (!isSideA) { // This block is only for Side B
             if(marginX - heightOfTabs >= 0)
@@ -256,11 +265,11 @@ public class Box
         String pathData;
         if(isSideA)
         {
-            pathData = GenerateRectanglePathSideA(positionX, positionY, dimension, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY, isBottom);
+            pathData = GenerateRectanglePathSideA(positionX, positionY, dimension, side, heightOfTabs, nHorizontal, nVertical, marginX, marginY, isBottom);
         }
         else
         {
-            pathData = GenerateRectanglePathSideB(positionX, positionY, dimension, height, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
+            pathData = GenerateRectanglePathSideB(positionX, positionY, dimension, side, heightOfTabs, nHorizontal, nVertical, marginX, marginY);
         }
 
         String svgContent = String.format("""
@@ -279,14 +288,14 @@ public class Box
             if (isSideA) 
             {
                 float depthBase = depth + 2 * widthOfTabs;
-                if(depthBase > height)
+                if(depthBase > side)
                     positionY += spaceBetween + depthBase;
                 else
-                    positionY += spaceBetween + height;
+                    positionY += spaceBetween + side;
             }
             else 
             { // This is Side B's simpler logic
-                positionY += spaceBetween + height;
+                positionY += spaceBetween + side;
             }
             positionX = 10 * conversion;
             pieces = 0;
