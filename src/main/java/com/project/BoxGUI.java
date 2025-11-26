@@ -1,19 +1,14 @@
 package com.project;
 
-import java.util.concurrent.BrokenBarrierException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafx.application.*;
-import javafx.event.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.*;
 
 public class BoxGUI extends Application
@@ -59,17 +54,27 @@ public class BoxGUI extends Application
         grid.setVgap(5);
         grid.setHgap(8);
 
+        //Unit input
+        Label unitLabel = new Label("Unit:");
+        GridPane.setConstraints(unitLabel, 0, 0);
+        ChoiceBox<String> unitChoice = new ChoiceBox<>();
+        unitChoice.getItems().addAll("Millimeters", "Inches");
+        unitChoice.setValue("Millimeters");
+        GridPane.setConstraints(unitChoice, 1, 0);
+        //Doesn't change anything yet
+
         //Width input
         Label widthLabel = new Label("Width:");
-        GridPane.setConstraints(widthLabel, 0, 0);
+        GridPane.setConstraints(widthLabel, 0, 1);
         TextField widthInput = new TextField("100");
-        GridPane.setConstraints(widthInput, 1, 0);
+        GridPane.setConstraints(widthInput, 1, 1);
         widthInput.setId("Width Input");
-        widthInput.setOnMouseClicked(e -> {     //reset color on click
-            widthInput.setStyle("-fx-control-inner-background: #ffffffff;");
-        });
         final String[] lastValue = {widthInput.getText()};
         widthInput.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if(newFocus){
+                widthInput.setStyle("-fx-control-inner-background: #ffffffff;");
+                return;
+            }
             if(!newFocus){  //When user clicks off box
                 String current = widthInput.getText();
                 
@@ -84,14 +89,16 @@ public class BoxGUI extends Application
 
         //Height input
         Label heightLabel = new Label("Height:");
-        GridPane.setConstraints(heightLabel, 0, 1);
+        GridPane.setConstraints(heightLabel, 0, 2);
         TextField heightInput = new TextField("100");
-        GridPane.setConstraints(heightInput, 1, 1);
+        GridPane.setConstraints(heightInput, 1, 2);
         heightInput.setId("Height Input");
-        heightInput.setOnMouseClicked(e -> {
-            heightInput.setStyle("-fx-control-inner-background: #ffffffff;");
-        });
+        
         heightInput.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if(newFocus){
+                heightInput.setStyle("-fx-control-inner-background: #ffffffff;");
+                return;
+            }
             if(!newFocus){  //When user clicks off box
                 String current = heightInput.getText();
                 
@@ -105,14 +112,15 @@ public class BoxGUI extends Application
 
         //Depth input
         Label depthLabel = new Label("Depth:");
-        GridPane.setConstraints(depthLabel, 0, 2);
+        GridPane.setConstraints(depthLabel, 0, 3);
         TextField depthInput = new TextField("100");
-        GridPane.setConstraints(depthInput, 1, 2);
+        GridPane.setConstraints(depthInput, 1, 3);
         depthInput.setId("Depth Input");
-        depthInput.setOnMouseClicked(e -> {
-            depthInput.setStyle("-fx-control-inner-background: #ffffffff;");
-        });
         depthInput.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if(newFocus){
+                depthInput.setStyle("-fx-control-inner-background: #ffffffff;");
+                return;
+            }
             if(!newFocus){  //When user clicks off box
                 String current = depthInput.getText();
                 
@@ -176,7 +184,7 @@ public class BoxGUI extends Application
         GridPane.setConstraints(fileInput, 1, 6);
         fileInput.setId("File Name Input");
 
-        grid.getChildren().addAll(widthLabel, widthInput, heightLabel, heightInput, depthLabel, 
+        grid.getChildren().addAll(unitLabel, unitChoice, widthLabel, widthInput, heightLabel, heightInput, depthLabel, 
             depthInput, engraveLabel, engraveInput, sideLabel, sideChoice, fileLabel, fileInput);
 
         //Buttons for generating and downloading svg
@@ -267,7 +275,14 @@ public class BoxGUI extends Application
         if(!hasInput(input, value)) return false;
         
         try{
-            Float.parseFloat(value);
+            float num = Float.parseFloat(value);
+
+            if(num < 30){
+                input.setStyle("-fx-control-inner-background: #ff9999;");
+                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 30.");
+                return false;
+            }
+
             return true;
         }catch(NumberFormatException e){
             input.setStyle("-fx-control-inner-background: #ff9999;");
