@@ -119,7 +119,6 @@ public class BoxGUI extends Application
                 if(!current.equals(lastValue[0])){  //If value has changed
                     System.out.println("New depth");
                     isFloat(depthInput, current);      //Check if it is a valid float
-                    //check if it is in min/max range
                 }   
             }
         });
@@ -197,7 +196,28 @@ public class BoxGUI extends Application
             //check fileName
 
             //if correct generate preview
-        });  */
+        });  
+        
+        
+    private boolean isInRange(TextField input, String value){
+        if(!hasInput(input, value)) return false;
+
+        try{
+            float val = Float.parseFloat(value);
+            if(val < 30 || val > 1000){
+                input.setStyle("-fx-control-inner-background: #ff9999;");
+                errorMessage("ERROR", "'" + value + "' is out of range. Must be between 30 and 1000.");
+                return false;
+            }
+            return true;
+        }catch(NumberFormatException e){
+            input.setStyle("-fx-control-inner-background: #ff9999;");
+            errorMessage("ERROR", "'" + value + "' is not a float.");
+            return false;
+        }
+    }
+        
+        */
         Button downloadButton = new Button("Download");
         downloadButton.setOnAction(e -> {
             System.err.println("Generate " + fileInput.getText());
