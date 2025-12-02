@@ -61,7 +61,17 @@ public class BoxGUI extends Application
         unitChoice.getItems().addAll("Millimeters", "Inches");
         unitChoice.setValue("Millimeters");
         GridPane.setConstraints(unitChoice, 1, 0);
-        //Doesn't change anything yet
+        //Set unit variable
+        unitChoice.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newvalue) -> {
+            switch(newvalue){
+                case "Millimeters":
+                    conversion = 2.83f;
+                    break;
+                case "Inches":
+                    conversion = 72f;
+                    break;
+            }
+        });
 
         //Width input
         Label widthLabel = new Label("Width:");
@@ -69,7 +79,7 @@ public class BoxGUI extends Application
         TextField widthInput = new TextField("100");
         GridPane.setConstraints(widthInput, 1, 1);
         widthInput.setId("Width Input");
-        final String[] lastValue = {widthInput.getText()};
+        final String[] lastInput = {widthInput.getText()};
         widthInput.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
             if(newFocus){
                 widthInput.setStyle("-fx-control-inner-background: #ffffffff;");
@@ -78,7 +88,7 @@ public class BoxGUI extends Application
             if(!newFocus){  //When user clicks off box
                 String current = widthInput.getText();
                 
-                if(!current.equals(lastValue[0])){  //If value has changed
+                if(!current.equals(lastInput[0])){  //If value has changed
                     System.out.println("New width");
                     isFloat(widthInput, current);      //Check if it is a valid float
                     //check if it is in min/max range
@@ -102,7 +112,7 @@ public class BoxGUI extends Application
             if(!newFocus){  //When user clicks off box
                 String current = heightInput.getText();
                 
-                if(!current.equals(lastValue[0])){  //If value has changed
+                if(!current.equals(lastInput[0])){  //If value has changed
                     System.out.println("New height");
                     isFloat(heightInput, current);      //Check if it is a valid float
                     //check if it is in min/max range
@@ -124,7 +134,7 @@ public class BoxGUI extends Application
             if(!newFocus){  //When user clicks off box
                 String current = depthInput.getText();
                 
-                if(!current.equals(lastValue[0])){  //If value has changed
+                if(!current.equals(lastInput[0])){  //If value has changed
                     System.out.println("New depth");
                     isFloat(depthInput, current);      //Check if it is a valid float
                 }   
@@ -144,7 +154,7 @@ public class BoxGUI extends Application
             if(!newFocus){  //When user clicks off box
                 String current = engraveInput.getText();
                 
-                if(!current.equals(lastValue[0])){  //If value has changed
+                if(!current.equals(lastInput[0])){  //If value has changed
                     System.out.println("New engraving");
                     checkEngravement(engraveInput, current);      //Check if it is a valid value
                 }   
@@ -228,6 +238,7 @@ public class BoxGUI extends Application
         */
         Button downloadButton = new Button("Download");
         downloadButton.setOnAction(e -> {
+            convertMeasurments(conversion);
             System.err.println("Generate " + fileInput.getText());
             generateSVG(Float.parseFloat(widthInput.getText()), Float.parseFloat(heightInput.getText()), 
                 Float.parseFloat(depthInput.getText()), engraveInput.getText(), fileInput.getText());
@@ -337,12 +348,16 @@ public class BoxGUI extends Application
         window.showAndWait();
     }
 
-    private void generateSVG(float width, float height, float depth, String engraving, String fileName){
+    private void convertMeasurments(float conv)
+    {
+        width = width * conv;
+        height = height * conv;
+        depth = depth * conv;
+    }
 
+    private void generateSVG(float width, float height, float depth, String engraving, String fileName){
+        
         Box guiBox = new Box(boxType,width,height,depth,10,engraving,"Arial",engravingSide,fileName,1);
         guiBox.print();
     }
-
-
-
 }

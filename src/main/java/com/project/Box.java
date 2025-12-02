@@ -14,7 +14,7 @@ public class Box
     public float fontSize;
     public int engSides;
     public float conversion;
-    private final float MinimumSize = 25.0f;
+    private final float MinimumSize = 30f;
     private float strokeWidth = 0.1f * conversion, widthOfTabs = 10, heightOfTabs = 5, tabDepth = 11.0f; // Debug values
 
     // Create two variables to track the position of every piece we add
@@ -42,15 +42,15 @@ public class Box
         this.font = font;
         this.fileName = fileName;
         this.conversion = conversion;
-        this.spaceBetween = 5 + 2*this.widthOfTabs * conversion;
 
         //measurements
         strokeWidth = 0.1f * conversion;
-        widthOfTabs = 10 * conversion;
-        heightOfTabs = 5 * conversion;
-        tabDepth = 11.0f * conversion;
+        heightOfTabs = 5 * conversion;  // should be the thickness of wood ([old] 5 * conversion)
+        widthOfTabs = 10 * conversion;  // should be side length/2
         positionX = 10 * conversion;
         positionY = 10 * conversion;
+
+        this.spaceBetween = 5 + 2*this.widthOfTabs * conversion;
     }
 
     // Width Setter
@@ -120,9 +120,8 @@ public class Box
         this.conversion = conversion;
 
         strokeWidth = 0.1f * conversion;
+        heightOfTabs = 5 * conversion;  // should be the thickness of wood ([old] 5 * conversion)
         widthOfTabs = 10 * conversion;
-        heightOfTabs = 5 * conversion;
-        tabDepth = 11.0f * conversion;
         positionX = 10 * conversion;
         positionY = 10 * conversion;
         spaceBetween = 5 + 2*this.widthOfTabs * conversion;
