@@ -1,0 +1,15 @@
+<!-- Copy this file to %USERPROFILE%\.m2\toolchains.xml to let Maven pick the JDK automatically.
+     Edit <jdkHome> if your JDK is in a different location.
+-->
+<toolchains>
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>21</version>
+      <vendor>temurin</vendor>
+    </provides>
+    <configuration>
+      <jdkHome>C:\\Users\\Dennis\\.jdk\\jdk-21.0.8(1)</jdkHome>
+    <configuration>
+      <jdkHome>C:\\Users\\Dennis\\.jdk\\jdk-21.0.8</jdkHome>
+    </configuration>
