@@ -8,14 +8,14 @@ import java.util.Locale; //Change standard settings to America
 
 public class Box
 {
-    public float width = 0.0f, height = 0.0f, depth = 0.0f;
+    public float width, height, depth;
     public int numTabs, boxType;
     public String engraving = "", font, fileName;
     public float fontSize;
     public int engSides;
     public float conversion;
-    private final float MinimumSize = 30f;
-    private float strokeWidth = 0.1f * conversion, widthOfTabs = 10, heightOfTabs = 5, tabDepth = 11.0f; // Debug values
+    private final float MinimumSize = 5f;
+    private float strokeWidth, widthOfTabs, heightOfTabs; // Debug values
 
     // Create two variables to track the position of every piece we add
     private float positionX = 10;
@@ -32,7 +32,7 @@ public class Box
         if(width < MinimumSize || height < MinimumSize || depth < MinimumSize)
             throw new IllegalArgumentException("Width and Height must be at least " + MinimumSize);
         this.boxType = boxType;
-        this.width = width;
+        this.width = width ;
         this.height = height;
         this.depth = depth;
         this.numTabs = numTabs;
@@ -44,13 +44,26 @@ public class Box
         this.conversion = conversion;
 
         //measurements
-        strokeWidth = 0.1f * conversion;
-        heightOfTabs = 3 * conversion;  // should be the thickness of wood
-        widthOfTabs = 10 * conversion;  // should be side length/2
-        positionX = 10 * conversion;
-        positionY = 10 * conversion;
-
-        this.spaceBetween = 15 * conversion;
+        if(conversion == 72f) //inch specific adjustment
+        {
+            //strokeWidth = 0.001f * conversion;
+            strokeWidth = 0.003937008f * conversion;
+            heightOfTabs = 0.2f * conversion;  // should be the thickness of wood
+            widthOfTabs = 0.5f * conversion;
+            positionX = 0.4f * conversion;
+            positionY = 0.4f * conversion;
+            this.spaceBetween = 1.37f * conversion;
+        }
+        else
+        {
+            //strokeWidth = 0.00254f * conversion;
+            strokeWidth = 0.1f * conversion;
+            heightOfTabs = 5.08f * conversion;  // should be the thickness of wood
+            widthOfTabs = 12.7f * conversion;
+            positionX = 10 * conversion;
+            positionY = 10 * conversion;
+            this.spaceBetween = 35 * conversion;
+        }
     }
 
     // Width Setter
@@ -136,7 +149,12 @@ public class Box
     {
         System.out.println("Measurments: " + width + "x" + height + "x" + depth);
         Locale.setDefault(Locale.US);   // My standard settings are European settings, so please dont remove
-        float padding = 10 * conversion; // Create a variable for padding
+        
+         float padding;
+        if(conversion == 72f)
+            padding = 0.4f * conversion; // Create a variable for padding
+        else
+            padding = 10 * conversion; // Create a variable for padding
         
         // Base slightly larger than the rest
         float widthBase = width + 5 * heightOfTabs;
@@ -144,8 +162,8 @@ public class Box
         float heightBase = height + 5 * heightOfTabs;
 
         // Create a variable for the file_width and file_height
-        float file_width = Math.max(3*widthBase, widthBase + 2*depthBase) + 2 * padding;
-        float file_height = Math.max(2*heightBase, depthBase + heightBase) + 4 * padding;
+        float file_width = Math.max(3*widthBase, widthBase + 2*depthBase) + 5 * padding;
+        float file_height = Math.max(2*heightBase, depthBase + heightBase) + 5 * padding;
             
         // Break the string down
         String svgOpener = String.format("""
@@ -214,6 +232,7 @@ public class Box
 
     private String addSide(boolean isSideA, boolean hasEngraving, boolean isBottom)
     {
+        System.out.println("width: " + width);
         pieces += 1;
 
         float dimension;
@@ -230,6 +249,7 @@ public class Box
             dimension = isSideA ? width : depth;
             side = height;
         }
+        System.out.print("Dimension: " + dimension + " WidthofTabs: " + widthOfTabs + "\n");
         String sideEngraving = hasEngraving ? engraving : ""; // Removes the engraving if hasEngraving is false
 
         // Look for the center of the box
@@ -238,6 +258,7 @@ public class Box
 
         // Number of tabs per side
         int nHorizontal = (int)(dimension*2 / (2*widthOfTabs));
+        System.out.println("nHorizontal " + nHorizontal);
         int nVertical = (int)(side*2 / (2*widthOfTabs));
 
         // Caculate the space we need on the sides
@@ -254,6 +275,7 @@ public class Box
         {
             nHorizontal -= 1;
             xCenter -= heightOfTabs;
+            System.out.println("X_Center " + xCenter);
         }
         if(nVertical % 2 == 0)
         {
@@ -297,7 +319,10 @@ public class Box
             { // This is Side B's simpler logic
                 positionY += spaceBetween + side;
             }
-            positionX = 10 * conversion;
+            if(conversion == 72f)
+                positionX = 0.4f * conversion;
+            else
+                positionX = 10 * conversion;
             pieces = 0;
         }
 
@@ -526,6 +551,7 @@ public class Box
     //Generates a side with the right measurements
     public String GenerateRectanglePathSideA(float x, float y, float width, float height, float tabDepth, int nHorizontal, int nVertical, float marginX, float marginY, boolean bottom)
     {
+        System.out.println(x + " " + y + " " + width + " " + height + " " + marginX + " " + nHorizontal + " " + nVertical);
         StringBuilder path = new StringBuilder();
         path.append(String.format("M %f %f ", x, y)); // Start at top-left corner
 

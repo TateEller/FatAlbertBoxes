@@ -13,6 +13,10 @@ import javafx.stage.*;
 
 public class BoxGUI extends Application
 {
+    TextField widthInput;   // <-- now class-wide
+    TextField heightInput;
+    TextField depthInput;
+
     Stage window;
     Button type1Button, type2Button, type3Button;
     Button genButton, downButton;
@@ -24,8 +28,15 @@ public class BoxGUI extends Application
     String engraving = "FA";
     String font = "";   //I don't think font is needed either. It doesnt seem to be assigned anywhere
     String fileName = "Untitled";
-    float conversion = 1;   //I don't know what this does
+    float conversion = 2.83465f;   //I don't know what this does
     int tabCount = 5;
+
+    // Internal raw measurements are ALWAYS stored in millimeters:
+    float widthMM = 100;
+    float heightMM = 100;
+    float depthMM = 100;
+
+    boolean usingInches = false;  // false = mm, true = inches
 
     public static void main(String[] args)
     {
@@ -36,6 +47,10 @@ public class BoxGUI extends Application
     public void start(Stage primaryStage) throws Exception {
         window = primaryStage;
         window.setTitle("Fat Albert Box Generator");
+
+        widthInput = new TextField("100");
+        heightInput = new TextField("100");
+        depthInput = new TextField("100");
         
         //Buttons for selecting type of box
         type1Button = new Button("Base Box");
@@ -55,6 +70,7 @@ public class BoxGUI extends Application
         grid.setVgap(5);
         grid.setHgap(8);
 
+
         //Unit input
         Label unitLabel = new Label("Unit:");
         GridPane.setConstraints(unitLabel, 0, 0);
@@ -68,17 +84,24 @@ public class BoxGUI extends Application
                 default:
                 case "Millimeters":
                     conversion = 2.83465f;
+                    widthInput.setText(String.valueOf(Float.parseFloat(widthInput.getText())/0.03937008f));
+                    heightInput.setText(String.valueOf(Float.parseFloat(heightInput.getText())/0.03937008f));
+                    depthInput.setText(String.valueOf(Float.parseFloat(depthInput.getText())/0.03937008f));
                     break;
                 case "Inches":
                     conversion = 72f;
+                    widthInput.setText(String.valueOf(Float.parseFloat(widthInput.getText())*0.03937008f));
+                    heightInput.setText(String.valueOf(Float.parseFloat(heightInput.getText())*0.03937008f));
+                    depthInput.setText(String.valueOf(Float.parseFloat(depthInput.getText())*0.03937008f));
                     break;
             }
         });
 
+
         //Width input
         Label widthLabel = new Label("Width:");
         GridPane.setConstraints(widthLabel, 0, 1);
-        TextField widthInput = new TextField("100");
+        widthInput = new TextField("100");
         GridPane.setConstraints(widthInput, 1, 1);
         widthInput.setId("Width Input");
         final String[] lastInput = {widthInput.getText()};
@@ -102,7 +125,7 @@ public class BoxGUI extends Application
         //Height input
         Label heightLabel = new Label("Height:");
         GridPane.setConstraints(heightLabel, 0, 2);
-        TextField heightInput = new TextField("100");
+        heightInput = new TextField("100");
         GridPane.setConstraints(heightInput, 1, 2);
         heightInput.setId("Height Input");
         
@@ -125,7 +148,7 @@ public class BoxGUI extends Application
         //Depth input
         Label depthLabel = new Label("Depth:");
         GridPane.setConstraints(depthLabel, 0, 3);
-        TextField depthInput = new TextField("100");
+        depthInput = new TextField("100");
         GridPane.setConstraints(depthInput, 1, 3);
         depthInput.setId("Depth Input");
         depthInput.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
@@ -297,9 +320,14 @@ public class BoxGUI extends Application
         try{
             float num = Float.parseFloat(value);
 
-            if(num < 30){
+            if((num < 30 || num > 508) && conversion == 2.83465f){
                 input.setStyle("-fx-control-inner-background: #ff9999;");
-                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 30.");
+                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 30 and can not be higher than 508.");
+                return false;
+            }
+            if((num < 1.5 || num > 20) && conversion == 72f){
+                input.setStyle("-fx-control-inner-background: #ff9999;");
+                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 1.5 and can not be higher than 20.");
                 return false;
             }
 

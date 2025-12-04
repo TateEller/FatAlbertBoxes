@@ -147,17 +147,16 @@ public class CardBox {
             """;
         String svgContent = "";
         
-        // Add the base
-        //svgContent += addBase();
+        //First Row
         
-        // Add the top
-        //svgContent += addTop();
+        //Second Row
 
-        // Add four sides
-        //svgContent += addSide();
-        //svgContent += addSide();
-        //svgContent += addSide();
-        //svgContent += addSide();
+        //Third Row
+
+        //Fourth Row
+
+        //Fifth Row
+        
         
         // Create the svg file
         String svgWhole = svgOpener + svgContent + svgCloser;
