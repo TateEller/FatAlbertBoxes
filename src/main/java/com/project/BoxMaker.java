@@ -14,8 +14,8 @@ public class BoxMaker
 
         float conversion = switch (measurement) 
         {
-            case 1 -> 96f;
-            case 2 -> 3.78f;
+            case 1 -> 96f;  //inches
+            case 2 -> 3.78f;    //millimeters
             default -> throw new IllegalArgumentException("Invalid measurement: " + measurement);
         };
 

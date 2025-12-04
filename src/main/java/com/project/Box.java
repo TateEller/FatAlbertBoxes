@@ -45,12 +45,12 @@ public class Box
 
         //measurements
         strokeWidth = 0.1f * conversion;
-        heightOfTabs = 5 * conversion;  // should be the thickness of wood ([old] 5 * conversion)
+        heightOfTabs = 3 * conversion;  // should be the thickness of wood
         widthOfTabs = 10 * conversion;  // should be side length/2
         positionX = 10 * conversion;
         positionY = 10 * conversion;
 
-        this.spaceBetween = 5 + 2*this.widthOfTabs * conversion;
+        this.spaceBetween = 15 * conversion;
     }
 
     // Width Setter
@@ -120,11 +120,11 @@ public class Box
         this.conversion = conversion;
 
         strokeWidth = 0.1f * conversion;
-        heightOfTabs = 5 * conversion;  // should be the thickness of wood ([old] 5 * conversion)
+        heightOfTabs = 3 * conversion;  // should be the thickness of wood 
         widthOfTabs = 10 * conversion;
         positionX = 10 * conversion;
         positionY = 10 * conversion;
-        spaceBetween = 5 + 2*this.widthOfTabs * conversion;
+        spaceBetween = 15 * conversion;
     }
 
     public Box build()
@@ -134,6 +134,7 @@ public class Box
 
     public void print()
     {
+        System.out.println("Measurments: " + width + "x" + height + "x" + depth);
         Locale.setDefault(Locale.US);   // My standard settings are European settings, so please dont remove
         float padding = 10 * conversion; // Create a variable for padding
         
