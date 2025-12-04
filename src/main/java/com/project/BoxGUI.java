@@ -25,6 +25,7 @@ public class BoxGUI extends Application
     String font = "";   //I don't think font is needed either. It doesnt seem to be assigned anywhere
     String fileName = "Untitled";
     float conversion = 1;   //I don't know what this does
+    int tabCount = 5;
 
     public static void main(String[] args)
     {
@@ -64,8 +65,9 @@ public class BoxGUI extends Application
         //Set unit variable
         unitChoice.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newvalue) -> {
             switch(newvalue){
+                default:
                 case "Millimeters":
-                    conversion = 2.83f;
+                    conversion = 2.83465f;
                     break;
                 case "Inches":
                     conversion = 72f;
@@ -238,10 +240,17 @@ public class BoxGUI extends Application
         */
         Button downloadButton = new Button("Download");
         downloadButton.setOnAction(e -> {
+            //Get input values
+            width = Float.parseFloat(widthInput.getText());
+            height = Float.parseFloat(heightInput.getText());
+            depth = Float.parseFloat(depthInput.getText());
+            engraving = engraveInput.getText();
+            fileName = fileInput.getText();
+
             convertMeasurments(conversion);
+            calculateNumTab();
             System.err.println("Generate " + fileInput.getText());
-            generateSVG(Float.parseFloat(widthInput.getText()), Float.parseFloat(heightInput.getText()), 
-                Float.parseFloat(depthInput.getText()), engraveInput.getText(), fileInput.getText());
+            generateSVG(width, height, depth, engraving, fileName);
         });
 
         HBox bottomButtons = new HBox(10);
@@ -350,14 +359,26 @@ public class BoxGUI extends Application
 
     private void convertMeasurments(float conv)
     {
+        conversion = conv;
+        System.out.print("Converting " + width + "x" + height + "x" + depth);
+
         width = width * conv;
         height = height * conv;
         depth = depth * conv;
+
+        System.out.println(" to " + width + "x" + height + "x" + depth);
+    }
+
+    private void calculateNumTab()
+    {
+        float shortSide = Math.min(width, Math.min(height, depth));
+
     }
 
     private void generateSVG(float width, float height, float depth, String engraving, String fileName){
-        
-        Box guiBox = new Box(boxType,width,height,depth,10,engraving,"Arial",engravingSide,fileName,1);
+        System.out.println("Passing " + width + "x" + height + "x" + depth);
+
+        Box guiBox = new Box(boxType,width,height,depth,tabCount,engraving,"Arial",engravingSide,fileName,conversion);
         guiBox.print();
     }
 }
