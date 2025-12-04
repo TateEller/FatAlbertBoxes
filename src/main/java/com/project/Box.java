@@ -32,7 +32,7 @@ public class Box
         if(width < MinimumSize || height < MinimumSize || depth < MinimumSize)
             throw new IllegalArgumentException("Width and Height must be at least " + MinimumSize);
         this.boxType = boxType;
-        this.width = width ;
+        this.width = width;
         this.height = height;
         this.depth = depth;
         this.numTabs = numTabs;
@@ -64,6 +64,9 @@ public class Box
             positionY = 10 * conversion;
             this.spaceBetween = 35 * conversion;
         }
+        this.width = width - (2 * heightOfTabs);
+        this.depth = depth - (2 * heightOfTabs);
+        this.height = height - (2.5f * heightOfTabs);
     }
 
     // Width Setter
