@@ -221,7 +221,11 @@ public class Box
         
         // Create the svg file
         String svgWhole = svgOpener + svgContent + svgCloser;
-        File file = new File("exports/" + fileName + ".svg");
+
+        //Choose where to save the file
+        File file = new File("exports/" + fileName + ".svg");   //Save to exports folder in project
+        //File file = new File(getDownloadsFolder(), fileName + ".svg");   //Save to user downloads folder
+
         try (FileWriter writer = new FileWriter(file)) 
         {
             writer.write(svgWhole);
@@ -231,6 +235,22 @@ public class Box
         {
             e.printStackTrace();
         }
+
+    }
+
+    public static File getDownloadsFolder(){
+        //Get user downloads folder
+        String home = System.getProperty("user.home");
+        
+        // Windows
+        File downloads = new File(home + "Downloads");
+        if (downloads.exists()) { return downloads; }
+
+        //Mac & Linux
+        downloads = new File(home + "/Downloads");
+        if (downloads.exists()) { return downloads; }
+
+        return new File(home); // if no downloads folder found, return home
     }
 
     private String addSide(boolean isSideA, boolean hasEngraving, boolean isBottom)

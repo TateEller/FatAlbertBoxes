@@ -21,6 +21,8 @@ public class BoxGUI extends Application
     Button type1Button, type2Button, type3Button;
     Button genButton, downButton;
 
+    String[] boxColor = {"#cac69eff", "#8cc2e1ff", "#bda1deff"}; //Colors for different box types
+
     int boxType = 1;
     float width, height, depth = 100;
     float numTabs;  //I'm not sure if we need this still or if the tab count is auto calculated
@@ -54,15 +56,15 @@ public class BoxGUI extends Application
         
         //Buttons for selecting type of box
         type1Button = new Button("Base Box");
-        type1Button.setOnAction(e -> boxType = 1);
+        type1Button.setStyle("-fx-background-color: "+boxColor[0]+";");
         type2Button = new Button("Closed Box");
-        type2Button.setOnAction(e -> boxType = 2);
+        type2Button.setStyle("-fx-background-color: "+boxColor[1]+";");
         type3Button = new Button("Type 3 Box");
-        type3Button.setOnAction(e -> boxType = 3);
+        type3Button.setStyle("-fx-background-color: "+boxColor[2]+";");
 
         HBox topButtons = new HBox(10);
         topButtons.setPadding(new Insets(10,10,10,10));
-        topButtons.getChildren().addAll(type1Button, type2Button, type3Button);
+        topButtons.getChildren().addAll(type1Button, type2Button);
 
         //Grid for the user input of variables
         GridPane grid = new GridPane();
@@ -284,6 +286,22 @@ public class BoxGUI extends Application
         VBox layout = new VBox(10);
         layout.setPadding(new Insets (10,10,10,10));
         layout.getChildren().addAll(topButtons, grid, bottomButtons);
+        layout.setStyle("-fx-background-color: " + boxColor[0] + ";");      //Default background color
+
+
+        //Recolor based on default box type
+        type1Button.setOnAction(e -> {
+            layout.setStyle("-fx-background-color: " + boxColor[0] + ";");
+            boxType = 1;
+        });
+        type2Button.setOnAction(e -> {
+            layout.setStyle("-fx-background-color: " + boxColor[1] + ";");
+            boxType = 2;
+        });
+        type3Button.setOnAction(e -> {
+            layout.setStyle("-fx-background-color: " + boxColor[2] + ";");
+            boxType = 3;
+        });
 
         /*        JavaFx doesn't support diplaying image as SVG
         //Image preview
@@ -320,14 +338,24 @@ public class BoxGUI extends Application
         try{
             float num = Float.parseFloat(value);
 
-            if((num < 50 || num > 508) && conversion == 2.83465f){
+            if(num < 49 && conversion == 2.83465f){
                 input.setStyle("-fx-control-inner-background: #ff9999;");
-                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 50 and can not be higher than 508.");
+                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 49.");
                 return false;
             }
-            if((num < 2 || num > 20) && conversion == 72f){
+            else if(num > 508 && conversion == 2.83465f){
                 input.setStyle("-fx-control-inner-background: #ff9999;");
-                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 2 and can not be higher than 20.");
+                errorMessage("ERROR", "'" + input.getId() + "'' can not be higher than 508.");
+                return false;
+            }
+            else if(num < 1.9 && conversion == 72f){
+                input.setStyle("-fx-control-inner-background: #ff9999;");
+                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 1.9.");
+                return false;
+            }
+            else if(num > 20 && conversion == 72f){
+                input.setStyle("-fx-control-inner-background: #ff9999;");
+                errorMessage("ERROR", "'" + input.getId() + "'' can not be higher than 20.");
                 return false;
             }
 
