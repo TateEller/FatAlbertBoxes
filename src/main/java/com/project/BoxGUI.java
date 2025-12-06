@@ -320,14 +320,14 @@ public class BoxGUI extends Application
         try{
             float num = Float.parseFloat(value);
 
-            if((num < 30 || num > 508) && conversion == 2.83465f){
+            if((num < 50 || num > 508) && conversion == 2.83465f){
                 input.setStyle("-fx-control-inner-background: #ff9999;");
-                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 30 and can not be higher than 508.");
+                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 50 and can not be higher than 508.");
                 return false;
             }
-            if((num < 1.5 || num > 20) && conversion == 72f){
+            if((num < 2 || num > 20) && conversion == 72f){
                 input.setStyle("-fx-control-inner-background: #ff9999;");
-                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 1.5 and can not be higher than 20.");
+                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 2 and can not be higher than 20.");
                 return false;
             }
 

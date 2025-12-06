@@ -48,7 +48,7 @@ public class Box
         {
             //strokeWidth = 0.001f * conversion;
             strokeWidth = 0.003937008f * conversion;
-            heightOfTabs = 0.2f * conversion;  // should be the thickness of wood
+            heightOfTabs = 0.12204724f * conversion;  // should be the thickness of wood
             widthOfTabs = 0.5f * conversion;
             positionX = 0.4f * conversion;
             positionY = 0.4f * conversion;
@@ -58,7 +58,7 @@ public class Box
         {
             //strokeWidth = 0.00254f * conversion;
             strokeWidth = 0.1f * conversion;
-            heightOfTabs = 5.08f * conversion;  // should be the thickness of wood
+            heightOfTabs = 3.1f * conversion;  // should be the thickness of wood
             widthOfTabs = 12.7f * conversion;
             positionX = 10 * conversion;
             positionY = 10 * conversion;
@@ -165,8 +165,8 @@ public class Box
         float heightBase = height + 5 * heightOfTabs;
 
         // Create a variable for the file_width and file_height
-        float file_width = Math.max(3*widthBase, widthBase + 2*depthBase) + 5 * padding;
-        float file_height = Math.max(2*heightBase, depthBase + heightBase) + 5 * padding;
+        float file_width = Math.max(3*widthBase, widthBase + 2*depthBase) + 6 * padding;
+        float file_height = Math.max(2*heightBase, depthBase + heightBase) + 6 * padding;
             
         // Break the string down
         String svgOpener = String.format("""
