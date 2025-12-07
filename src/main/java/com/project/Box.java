@@ -16,6 +16,7 @@ public class Box
     public float conversion;
     private final float MinimumSize = 5f;
     private float strokeWidth, widthOfTabs, heightOfTabs; // Debug values
+    private float tightness;
 
     // Create two variables to track the position of every piece we add
     private float positionX = 10;
@@ -42,6 +43,7 @@ public class Box
         this.font = font;
         this.fileName = fileName;
         this.conversion = conversion;
+        tightness = 1.01f;
 
         //measurements
         if(conversion == 72f) //inch specific adjustment
@@ -160,9 +162,9 @@ public class Box
             padding = 10 * conversion; // Create a variable for padding
         
         // Base slightly larger than the rest
-        float widthBase = width + 5 * heightOfTabs;
-        float depthBase = depth + 5 * heightOfTabs;
-        float heightBase = height + 5 * heightOfTabs;
+        float widthBase = width + 7 * heightOfTabs;
+        float depthBase = depth + 7 * heightOfTabs;
+        float heightBase = height + 7 * heightOfTabs;
 
         // Create a variable for the file_width and file_height
         float file_width = Math.max(3*widthBase, widthBase + 2*depthBase) + 6 * padding;
@@ -356,18 +358,6 @@ public class Box
     {
         pieces += 1;
 
-        // Base slightly larger than the rest
-        float widthBase = width + 5 * heightOfTabs;
-        float depthBase = depth + 5 * heightOfTabs;
-        float xCenter = positionX + widthBase / 2;
-        float yCenter = positionY + depthBase / 2;
-
-        // Main base rectangle
-        StringBuilder svgContent = new StringBuilder(String.format("""
-            <rect x="%f" y="%f" width="%f" height="%f" fill="none" stroke="black" stroke-width="%f"/>
-            <text x="%f" y="%f" text-anchor="middle" font-size="10" dominant-baseline="middle">%s</text>
-            """, positionX, positionY, widthBase, depthBase, strokeWidth, xCenter, yCenter, ""));  //having ("") at the end stops it from engraving on the bottom
-
         // --- Number of tabs per side ---
         int nHorizontal = (int)(width*2 / (2*widthOfTabs));
         int nVertical = (int)(depth*2 / (2*widthOfTabs));
@@ -380,6 +370,19 @@ public class Box
         nVertical /=2;
 
         nHorizontal /= 2;
+
+        // Base slightly larger than the rest
+        float widthBase = width + 10 * heightOfTabs - (tightness-1) * nHorizontal - heightOfTabs/10;
+        float depthBase = depth + 10 * heightOfTabs - (tightness-1) * nVertical - heightOfTabs/10;
+        float xCenter = positionX + widthBase / 2;
+        float yCenter = positionY + depthBase / 2;
+
+        // Main base rectangle
+        StringBuilder svgContent = new StringBuilder(String.format("""
+            <rect x="%f" y="%f" width="%f" height="%f" fill="none" stroke="black" stroke-width="%f"/>
+            <text x="%f" y="%f" text-anchor="middle" font-size="10" dominant-baseline="middle">%s</text>
+            """, positionX, positionY, widthBase, depthBase, strokeWidth, xCenter, yCenter, ""));  //having ("") at the end stops it from engraving on the bottom
+
         
         //caculate the space we need no the sides
         float marginX = (widthBase - (nHorizontal*widthOfTabs*2)+ widthOfTabs) /2;
@@ -580,9 +583,11 @@ public class Box
 
         float seg = widthOfTabs;
 
+        //path.append(String.format("v %fv %f", 1000.0f, -1000.0f)); //debug line
         // Top edge
         //always starts with a tab
         path.append(String.format("h %f ", marginX+seg)); //margin+seg
+        //path.append(String.format("v %fv %f", 1000.0f, -1000.0f)); //debug line
         for (int i = 0; i < nHorizontal-2; i++)
         {
             if (i % 2 == 0) // This is a gab
@@ -591,7 +596,7 @@ public class Box
             } 
             else // This is a tab
             {
-                path.append(String.format("h %f ", seg));
+                path.append(String.format("h %f ", seg*tightness));
             }
         }
         //end with a tap
@@ -605,7 +610,7 @@ public class Box
         {
             if (i % 2 == 0)
             {
-                path.append(String.format("v %f ", seg)); //this is a tab
+                path.append(String.format("v %f ", seg*tightness)); //this is a tab
             } 
             else 
             {
@@ -627,9 +632,9 @@ public class Box
             else 
             {
                 if(!bottom)
-                    path.append(String.format("v %f h %f v %f ", tabDepth, -seg, -tabDepth));
+                    path.append(String.format("v %f h %f v %f ", tabDepth, -seg*tightness, -tabDepth));
                 else
-                    path.append(String.format("v %f h %f v %f ", -tabDepth, -seg, tabDepth));
+                    path.append(String.format("v %f h %f v %f ", -tabDepth, -seg*tightness, tabDepth));
                 //System.out.println(i);
             }
         }
@@ -645,7 +650,7 @@ public class Box
         {
             if (i % 2 == 0) //always starts with a gap
             {
-                path.append(String.format("v %f ", -seg));
+                path.append(String.format("v %f ", -seg*tightness));
             } 
             else 
             {
@@ -683,7 +688,7 @@ public class Box
             } 
             else // This is a tab
             {
-                path.append(String.format("h %f ", seg));
+                path.append(String.format("h %f ", seg*tightness));
             }
         }
         //end with a tap
@@ -700,7 +705,7 @@ public class Box
             } 
             else 
             {
-                path.append(String.format("h %f v %f h %f ", tabDepth, seg, -tabDepth));
+                path.append(String.format("h %f v %f h %f ", tabDepth, seg*tightness, -tabDepth));
             }
         }
         //add the margin in the end
@@ -717,7 +722,7 @@ public class Box
             } 
             else 
             {
-                path.append(String.format("v %f h %f v %f ", tabDepth, -seg, -tabDepth));
+                path.append(String.format("v %f h %f v %f ", tabDepth, -seg*tightness, -tabDepth));
             }
         }
         //add the margin at the end
@@ -735,7 +740,7 @@ public class Box
             } 
             else 
             {
-                path.append(String.format("h %f v %f h %f ", -tabDepth, -seg, tabDepth));
+                path.append(String.format("h %f v %f h %f ", -tabDepth, -seg*tightness, tabDepth));
             }
         }
 
@@ -773,7 +778,7 @@ public class Box
         {
             if (i % 2 == 0) // This is a gab
             {
-                path.append(String.format("v %f h %f v %f ", -tabDepth, seg, tabDepth));
+                path.append(String.format("v %f h %f v %f ", -tabDepth, seg*tightness, tabDepth));
             } 
             else // This is a tab
             {
@@ -795,7 +800,7 @@ public class Box
             } 
             else 
             {
-                path.append(String.format("h %f v %f h %f ", tabDepth, seg, -tabDepth));
+                path.append(String.format("h %f v %f h %f ", tabDepth, seg*tightness, -tabDepth));
             }
         }
         //add the margin in the end
@@ -812,7 +817,7 @@ public class Box
             } 
             else 
             {
-                path.append(String.format("v %f h %f v %f ", tabDepth, -seg, -tabDepth));
+                path.append(String.format("v %f h %f v %f ", tabDepth, -seg*tightness, -tabDepth));
             }
         }
         //add the margin at the end
@@ -831,7 +836,7 @@ public class Box
             } 
             else 
             {
-                path.append(String.format("h %f v %f h %f ", -tabDepth, -seg, tabDepth));
+                path.append(String.format("h %f v %f h %f ", -tabDepth, -seg*tightness, tabDepth));
             }
         }
 
