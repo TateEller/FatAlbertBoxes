@@ -28,7 +28,7 @@ public class Box
     // Create a variable for the space between the pieces
     private float spaceBetween;
 
-    public Box(int boxType, float width, float height, float depth, int numTabs, String engraving, String font, int engSides, String fileName, float conversion)
+    public Box(int boxType, float width, float height, float depth, int numTabs, String engraving, String font, int engSides, String fileName, float conversion, float tightness)
     {
         if(width < MinimumSize || height < MinimumSize || depth < MinimumSize)
             throw new IllegalArgumentException("Width and Height must be at least " + MinimumSize);
@@ -43,7 +43,7 @@ public class Box
         this.font = font;
         this.fileName = fileName;
         this.conversion = conversion;
-        tightness = 1.01f;
+        this.tightness = tightness;
 
         //measurements
         if(conversion == 72f) //inch specific adjustment
@@ -147,7 +147,7 @@ public class Box
 
     public Box build()
     {
-        return new Box(boxType, width, height, depth, numTabs, engraving, font, engSides, fileName, conversion);
+        return new Box(boxType, width, height, depth, numTabs, engraving, font, engSides, fileName, conversion, tightness);
     }
 
     public void print()

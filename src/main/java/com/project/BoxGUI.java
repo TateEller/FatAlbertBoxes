@@ -38,6 +38,9 @@ public class BoxGUI extends Application
     float heightMM = 100;
     float depthMM = 100;
 
+    //Tightness setting
+    float tightness = 1.02f; // 1.02 = tight, 1.01 = medium, 1 = loose
+
     boolean usingInches = false;  // false = mm, true = inches
 
     public static void main(String[] args)
@@ -214,16 +217,38 @@ public class BoxGUI extends Application
             }
         });
 
+        //Tightness input
+        Label tightnessLabel = new Label("Tightness:");
+        GridPane.setConstraints(tightnessLabel, 0, 6);
+        ChoiceBox<String> tightnessChoice = new ChoiceBox<>();
+        tightnessChoice.getItems().add("Tight");   //add one item to dropdown menu
+        tightnessChoice.getItems().addAll("Medium", "Loose");   //add multiple items to dropdown menu
+        tightnessChoice.setValue("Tight"); //set default value
+        GridPane.setConstraints(tightnessChoice, 1, 6);
+        //Set tightness variable
+        tightnessChoice.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newvalue) -> {
+            switch(newvalue){
+                case "Tight":
+                    tightness = 1.02f;
+                    break;
+                case "Medium":
+                    tightness = 1.01f;
+                    break;
+                case "Loose":
+                    tightness = 1.0f;
+                    break;
+            }
+        });
+
         //FileName input
         Label fileLabel = new Label("File name:");
-        GridPane.setConstraints(fileLabel, 0, 6);
+        GridPane.setConstraints(fileLabel, 0, 7);
         TextField fileInput = new TextField("Untitled");
-        GridPane.setConstraints(fileInput, 1, 6);
+        GridPane.setConstraints(fileInput, 1, 7);
         fileInput.setId("File Name Input");
 
         grid.getChildren().addAll(unitLabel, unitChoice, widthLabel, widthInput, heightLabel, heightInput, depthLabel, 
-            depthInput, engraveLabel, engraveInput, sideLabel, sideChoice, fileLabel, fileInput);
-
+            depthInput, engraveLabel, engraveInput, sideLabel, sideChoice, tightnessLabel, tightnessChoice, fileLabel, fileInput);
         //Buttons for generating and downloading svg
         /*
         Button previewButton = new Button("Preview");
@@ -274,8 +299,19 @@ public class BoxGUI extends Application
 
             convertMeasurments(conversion);
             calculateNumTab();
-            System.err.println("Generate " + fileInput.getText());
-            generateSVG(width, height, depth, engraving, fileName);
+            if(!engraveInput.getStyle().contains("ff9999") &&
+               (!widthInput.getStyle().contains("ff9999")) &&
+               !heightInput.getStyle().contains("ff9999") &&
+               !depthInput.getStyle().contains("ff9999"))
+            {
+                System.err.println("Generate " + fileInput.getText());
+                generateSVG(width, height, depth, engraving, fileName);
+            }
+            else
+            {
+                System.err.println("Invalid input, cannot generate box.");
+                errorMessage("Invalid Input", "Cannot generate box due to invalid input. Please check all inputs and try again.");
+            }
         });
 
         HBox bottomButtons = new HBox(10);
@@ -435,7 +471,7 @@ public class BoxGUI extends Application
         System.out.println("Passing " + width + "x" + height + "x" + depth);
 
         if(boxType == 1 || boxType == 2){
-            Box guiBox = new Box(boxType,width,height,depth,tabCount,engraving,"Arial",engravingSide,fileName,conversion);
+            Box guiBox = new Box(boxType,width,height,depth,tabCount,engraving,"Arial",engravingSide,fileName,conversion, tightness);
             guiBox.print();
         }
         else if(boxType == 3){
