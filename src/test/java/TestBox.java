@@ -310,4 +310,12 @@ public class TestBox
         engravingBox.setEngraving("LE");
         assert engravingBox.engraving.equals("LE") : "Engraving not set correctly";
     }
+
+    @Test
+    public void testnormalBoxWidth()
+    {
+        Box box = new Box(1, 60.0f, 40.0f, 30.0f, 4, "", "Arial", 4,"PathTest",1f);
+        assert box.width == 60.0f : "Box width not set correctly";
+    }
+
 }
