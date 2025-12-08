@@ -1,3 +1,7 @@
+# How to use software
+
+After downloading the repository, open it in the command terminal or use the terminal from VisualSudio Code. Once there type "mvn clean javafx:run". Now the application should appear and use ot to create whatever box you want. After pressing the "download" button, the file will be saved to your downloads folder.
+
 # Laser-Cut Blueprint Generator
 
 A Java application designed to use an Epson (or equilavent) wood-cutting laser to generate blueprints for custom-sized boxes.
@@ -13,6 +17,4 @@ Created by:
 
 ## Features
 * **Customizable Dimensions:** Specify the exact width, height, and depth of the box.
-* **Text Engraving** Add initials to a specific side of the box.
-* **Font Selection** Choose the font for the engraving.
-* **Tab count adjustment** Specify the exact amount of connecting tabs (within certain constraints).
+* **Text Engraving** Add initials to a specific number of sides the box.

@@ -1,20 +1,21 @@
 import org.junit.Test;
 
 import com.project.Box;
+import com.project.NoteBox;
 
 public class TestBox
 {
     @Test
     public void testBoxCreation()
     {
-        Box box = new Box(1, 30.0f, 30.0f, 30.0f, 0, "Test", "Arial", 4, "TestBox",1f);
+        Box box = new Box(1, 30.0f, 30.0f, 30.0f, 0, "Test", "Arial", 4, "TestBox",1f, 1f);
         assert box != null : "Box creation failed";
     }
 
     @Test
     public void testHeightInput()
     {
-        Box heightBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",1f);
+        Box heightBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",2.83465f, 1f);
         try
         {
             heightBox.setHeight(10); // Below minimum size
@@ -26,22 +27,22 @@ public class TestBox
         }
 
         // Test 1
-        heightBox.setHeight(30); // Valid size
-        assert heightBox.height == 30 : "Height not set correctly";
+        heightBox.setHeight(50); // Valid size
+        assert heightBox.height == 50 : "Height not set correctly";
         
         // Test 2
         heightBox.setHeight(100); // Valid size
         assert heightBox.height == 100 : "Height not set correctly";
 
         // Test 3
-        heightBox.setHeight(25); // Edge case (minimum size)
-        assert heightBox.height == 25 : "Height not set correctly";
+        heightBox.setHeight(49); // Edge case (minimum size)
+        assert heightBox.height == 49 : "Height not set correctly";
     }
 
     @Test
     public void testWidthInput()
     {
-        Box heightBox = new Box(1, 50,50,50,5, "Test", "Arial", 4, "TestBox",1f);
+        Box heightBox = new Box(1, 50,50,50,5, "Test", "Arial", 4, "TestBox",2.83465f,1f);
         try
         {
             heightBox.setWidth(10); // Below minimum size
@@ -53,22 +54,22 @@ public class TestBox
         }
 
         // Test 1
-        heightBox.setWidth(30); // Valid size
-        assert heightBox.width == 30 : "Width not set correctly";
+        heightBox.setWidth(50); // Valid size
+        assert heightBox.width == 50 : "Width not set correctly";
         
         // Test 2
         heightBox.setWidth(100); // Valid size
         assert heightBox.width == 100 : "Width not set correctly";
 
         // Test 3
-        heightBox.setWidth(25); // Edge case (minimum size)
-        assert heightBox.width == 25 : "Width not set correctly";
+        heightBox.setWidth(49); // Edge case (minimum size)
+        assert heightBox.width == 49 : "Width not set correctly";
     } 
 
     @Test
     public void testDepthInput()
     {
-        Box depthBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",1f);
+        Box depthBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",2.83465f,1f);
         try
         {
             depthBox.setDepth(10); // Below minimum size
@@ -80,22 +81,22 @@ public class TestBox
         }
 
         // Test 1
-        depthBox.setDepth(30); // Valid size
-        assert depthBox.depth == 30 : "Depth not set correctly";
+        depthBox.setDepth(50); // Valid size
+        assert depthBox.depth == 50 : "Depth not set correctly";
         
         // Test 2
         depthBox.setDepth(100); // Valid size
         assert depthBox.depth == 100 : "Depth not set correctly";
 
         // Test 3
-        depthBox.setDepth(25); // Edge case (minimum size)
-        assert depthBox.depth == 25 : "Depth not set correctly";
+        depthBox.setDepth(49); // Edge case (minimum size)
+        assert depthBox.depth == 49 : "Depth not set correctly";
     }
 
     @Test
     public void testEngravingInput()
     {
-        Box engravingBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",1f);
+        Box engravingBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",1f,1f);
         
         // Test 1
         engravingBox.setEngraving("NE");
@@ -113,7 +114,7 @@ public class TestBox
     @Test
     public void testFontInput()
     {
-        Box fontBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",1f);
+        Box fontBox = new Box(1, 50.0f, 50.0f, 50.0f, 0, "Test", "Arial", 4, "TestBox",1f,1f);
         
         // Test 1
         fontBox.setFont("Arial");
@@ -131,7 +132,7 @@ public class TestBox
     @Test
     public void testTabInput()
     {
-        Box tabBox = new Box(1, 50, 50, 50, 5, "Test", "Arial", 4, "TestBox",1f);
+        Box tabBox = new Box(1, 50, 50, 50, 5, "Test", "Arial", 4, "TestBox",1f,1f);
 
         // Test 1
         tabBox.setTabs(5);
@@ -149,7 +150,7 @@ public class TestBox
     @Test
     public void testFileName()
     {
-        Box fileBox = new Box(1, 50, 50, 50, 5, "Test", "Arial", 4, "TestBox",1f);
+        Box fileBox = new Box(1, 50, 50, 50, 5, "Test", "Arial", 4, "TestBox",1f,1f);
 
         // Test 1
         fileBox.setFileName("Test1");
@@ -167,7 +168,7 @@ public class TestBox
     @Test
     public void testBuildAndClone()
     {
-        Box original = new Box(2, 80.0f, 60.0f, 40.0f, 3, "ENG", "Verdana", 4, "Orig",1f);
+        Box original = new Box(2, 80.0f, 60.0f, 40.0f, 3, "ENG", "Verdana", 4, "Orig",2.83465f,1f);
         Box built = original.build();
 
         // Assert built object is not null
@@ -184,7 +185,7 @@ public class TestBox
     @Test
     public void testConversionAndBuild()
     {
-        Box convBox = new Box(1, 100.0f, 50.0f, 30.0f, 2, "E", "Arial", 4, "Conv",1f);
+        Box convBox = new Box(1, 100.0f, 50.0f, 30.0f, 2, "E", "Arial", 4, "Conv",2.83465f,1f);
         convBox.setConversion(0.5f);
 
         // Test conversion updated
@@ -204,7 +205,7 @@ public class TestBox
     @Test
     public void testGeneratePathNonEmpty()
     {
-    Box pBox = new Box(1, 60.0f, 40.0f, 30.0f, 4, "", "Arial", 4,"PathTest",1f);
+        Box pBox = new Box(1, 60.0f, 40.0f, 30.0f, 4, "", "Arial", 4,"PathTest",1f,1f);
         String path = pBox.GenerateRectanglePath(0f, 0f, 60f, 40f, 4.0f, 4);
 
         // Test non-null
@@ -223,7 +224,7 @@ public class TestBox
     @Test
     public void testEngravingFontSize()
     {
-        Box efBox = new Box(1, 120.0f, 60.0f, 40.0f, 1, "", "Arial", 4,"EFTest",1f);
+        Box efBox = new Box(1, 120.0f, 60.0f, 40.0f, 1, "", "Arial", 4,"EFTest",1f,1f);
 
         efBox.setEngraving("Hello");
         assert efBox.engraving.equals("Hello") : "Engraving not set";
@@ -243,7 +244,7 @@ public class TestBox
     @Test
     public void testFileNameTabsAndBuild()
     {
-        Box ftBox = new Box(2, 90.0f, 70.0f, 50.0f, 0, "", "Arial", 4,"Start",1f);
+        Box ftBox = new Box(2, 90.0f, 70.0f, 50.0f, 0, "", "Arial", 4,"Start",1f,1f);
 
         ftBox.setFileName("MyBox");
         assert ftBox.fileName.equals("MyBox") : "File name not set";
@@ -279,10 +280,10 @@ public class TestBox
     @Test
     public void testBoxTypeSelection()
     {
-        Box box1 = new Box(1, 50, 50, 50, 5, "Test", "Arial", 4,"TestBox1",1f);
+        Box box1 = new Box(1, 50, 50, 50, 5, "Test", "Arial", 4,"TestBox1",1f,1f);
         assert box1.boxType == 1 : "Box type 1 selection failed";
 
-        Box box2 = new Box(2, 50, 50, 50, 5, "Test", "Arial", 4,"TestBox2",1f);
+        Box box2 = new Box(2, 50, 50, 50, 5, "Test", "Arial", 4,"TestBox2",1f,1f);
         assert box2.boxType == 2 : "Box type 2 selection failed";
     }
 
@@ -309,5 +310,90 @@ public class TestBox
         // Test 3
         engravingBox.setEngraving("LE");
         assert engravingBox.engraving.equals("LE") : "Engraving not set correctly";
+    }
+
+    @Test
+    public void testGUIboxes()
+    {
+        com.project.BoxGUI gui = new com.project.BoxGUI();
+        assert gui != null : "BoxGUI creation failed";
+    }
+
+    @Test
+    public void noteWidthTest()
+    {
+        NoteBox noteBox = new NoteBox(76.1f, 50.0f, 100.0f, "NoteBox", 2.83465f);
+        assert noteBox != null : "NoteBox creation failed";
+
+        try
+        {
+            noteBox.setWidth(10); // Below minimum size
+            assert false : "Expected IllegalArgumentException for width below minimum size";
+        }
+        catch(IllegalArgumentException e)
+        {
+            assert e.getMessage().contains("Width must be at least");
+        }
+
+        noteBox.setWidth(100);
+        assert noteBox.width == 100;
+
+        noteBox.setWidth(90);
+        assert noteBox.width == 90;
+
+        noteBox.setWidth(76.1f);   //edge case
+        assert noteBox.width == 76.1f;
+    }
+
+    @Test
+    public void noteHeightTest()
+    {
+        NoteBox noteBox = new NoteBox(76.1f, 50.0f, 100.0f, "NoteBox", 2.83465f);
+        assert noteBox != null : "NoteBox creation failed";
+
+        try
+        {
+            noteBox.setHeight(10); // Below minimum size
+            assert false : "Expected IllegalArgumentException for height below minimum size";
+        }
+        catch(IllegalArgumentException e)
+        {
+            assert e.getMessage().contains("Height must be at least");
+        }
+
+        noteBox.setHeight(100);
+        assert noteBox.height == 100;
+
+        noteBox.setHeight(90);
+        assert noteBox.height == 90;
+
+        noteBox.setHeight(76.1f);   //edge case
+        assert noteBox.height == 76.1f;
+    }
+
+    @Test
+    public void noteDepthTest()
+    {
+        NoteBox noteBox = new NoteBox(76.1f, 50.0f, 100.0f, "NoteBox", 2.83465f);
+        assert noteBox != null : "NoteBox creation failed";
+
+        try
+        {
+            noteBox.setDepth(10); // Below minimum size
+            assert false : "Expected IllegalArgumentException for depth below minimum size";
+        }
+        catch(IllegalArgumentException e)
+        {
+            assert e.getMessage().contains("Depth must be at least");
+        }
+
+        noteBox.setDepth(100);
+        assert noteBox.depth == 100;
+
+        noteBox.setDepth(90);
+        assert noteBox.depth == 90;
+
+        noteBox.setDepth(76.1f);   //edge case
+        assert noteBox.depth == 76.1f;
     }
 }
