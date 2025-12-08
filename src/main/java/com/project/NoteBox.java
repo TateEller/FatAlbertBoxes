@@ -10,7 +10,7 @@ public class NoteBox{
     public float width = 0.0f, height = 0.0f, depth = 0.0f;     //Width and depth are the size of the note cards
     public String fileName = "Untitled";
     public float conversion = 2.83465f; // Conversion from mm to points
-    public float tabWidth = 12.7f * conversion, tabDepth = 3.175f;
+    public float tabWidth = 12.7f * conversion, tabDepth = 4.5f;
     public float strokeWidth = 1f;
 
     

@@ -51,7 +51,7 @@ public class Box
         {
             //strokeWidth = 0.001f * conversion;
             strokeWidth = 0.003937008f * conversion;
-            heightOfTabs = 0.12204724f * conversion;  // should be the thickness of wood
+            heightOfTabs = 0.17716535f * conversion;  // should be the thickness of wood
             widthOfTabs = 0.5f * conversion;
             positionX = 0.4f * conversion;
             positionY = 0.4f * conversion;
@@ -61,7 +61,7 @@ public class Box
         {
             //strokeWidth = 0.00254f * conversion;
             strokeWidth = 0.1f * conversion;
-            heightOfTabs = 3.1f * conversion;  // should be the thickness of wood
+            heightOfTabs = 4.5f * conversion;  // should be the thickness of wood
             widthOfTabs = 12.7f * conversion;
             positionX = 10 * conversion;
             positionY = 10 * conversion;
@@ -406,8 +406,8 @@ public class Box
         nHorizontal /= 2;
 
         // Base slightly larger than the rest
-        float widthBase = width + 10 * heightOfTabs - (tightness-1) * nHorizontal - heightOfTabs/10;
-        float depthBase = depth + 10 * heightOfTabs - (tightness-1) * nVertical - heightOfTabs/10;
+        float widthBase = width + 2*widthOfTabs - (tightness-1) * nHorizontal + widthOfTabs/9.5f;
+        float depthBase = depth + 2*widthOfTabs - (tightness-1) * nVertical + widthOfTabs/9.5f;
         float xCenter = positionX + widthBase / 2;
         float yCenter = positionY + depthBase / 2;
 
