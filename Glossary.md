@@ -28,3 +28,15 @@ An alphebetized list of terms and acronyms for this project.
 
 **Height of Tabs**
 : The dimension of the connecting tabs that should equal the wood’s thickness for a tight, even joint.
+
+**Note Box**
+: Box for Notes.
+
+**Base Box**
+: A box with a baseplate.
+
+**Closed Box**
+: A box wich is in the shape of a cube with no additional features.
+
+**Tightness**
+: A measurement of how big the tabs are in correlation to the width of the tabs so that the boxes stick tighter.

@@ -312,8 +312,8 @@ public class Box
         String sideEngraving = hasEngraving ? engraving : ""; // Removes the engraving if hasEngraving is false
 
         // Look for the center of the box
-        float xCenter = positionX + dimension / 2 + 2*heightOfTabs;
-        float yCenter = positionY + side / 2 + 2*heightOfTabs;
+        float xCenter = positionX + dimension / 2 + heightOfTabs;
+        float yCenter = positionY + side / 2 + heightOfTabs;
 
         // Number of tabs per side
         int nHorizontal = (int)(dimension*2 / (2*widthOfTabs));
@@ -333,13 +333,11 @@ public class Box
         if(nHorizontal % 2 == 0)
         {
             nHorizontal -= 1;
-            xCenter -= heightOfTabs;
             System.out.println("X_Center " + xCenter);
         }
         if(nVertical % 2 == 0)
         {
             nVertical -= 1;
-            yCenter -= heightOfTabs;
         }
 
         // Choose the respective side generator based off the isSideA bool
@@ -355,7 +353,7 @@ public class Box
 
         String svgContent = String.format("""
             <path d="%s" stroke-width="%f" fill="none" stroke="black"/>
-            <text x="%.1f" y="%.1f" font-size="%.1f" text-anchor="middle" dominant-baseline="middle">%s</text>
+            <text x="%.1f" y="%.1f" font-size="%.1f" text-anchor="end" dominant-baseline="middle">%s</text>
             """, pathData, strokeWidth, xCenter, yCenter, fontSize, sideEngraving);
 
         // Update the position of the next piece
