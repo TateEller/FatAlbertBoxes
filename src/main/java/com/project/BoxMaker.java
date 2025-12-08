@@ -39,7 +39,7 @@ public class BoxMaker
         String font = ""; // Will need to get from user input later
         if(boxType <= 2)
         {
-            Box test = new Box(boxType, width, height, depth, numTabs, engraving, font, 4, fileName, conversion);
+            Box test = new Box(boxType, width, height, depth, numTabs, engraving, font, 4, fileName, conversion, 1);
             scanner.close();
             test.print();
         }

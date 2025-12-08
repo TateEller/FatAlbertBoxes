@@ -75,7 +75,6 @@ public class BoxGUI extends Application
         grid.setVgap(5);
         grid.setHgap(8);
 
-
         //Unit input
         Label unitLabel = new Label("Unit:");
         GridPane.setConstraints(unitLabel, 0, 0);
@@ -121,7 +120,6 @@ public class BoxGUI extends Application
                 if(!current.equals(lastInput[0])){  //If value has changed
                     System.out.println("New width");
                     isFloat(widthInput, current);      //Check if it is a valid float
-                    //check if it is in min/max range
                 }   
             }
         });
@@ -298,11 +296,11 @@ public class BoxGUI extends Application
             fileName = fileInput.getText();
 
             convertMeasurments(conversion);
-            calculateNumTab();
-            if(!engraveInput.getStyle().contains("ff9999") &&
-               (!widthInput.getStyle().contains("ff9999")) &&
-               !heightInput.getStyle().contains("ff9999") &&
-               !depthInput.getStyle().contains("ff9999"))
+            
+            if(checkEngravement(engraveInput, engraveInput.getText()) &&
+               isFloat(widthInput, widthInput.getText()) &&
+               isFloat(heightInput, heightInput.getText()) &&
+               isFloat(depthInput, depthInput.getText()))
             {
                 System.err.println("Generate " + fileInput.getText());
                 generateSVG(width, height, depth, engraving, fileName);
@@ -328,14 +326,19 @@ public class BoxGUI extends Application
         //Recolor based on default box type
         type1Button.setOnAction(e -> {
             layout.setStyle("-fx-background-color: " + boxColor[0] + ";");
+            grid.getChildren().removeAll(engraveLabel, engraveInput, sideLabel, sideChoice);
+            grid.getChildren().addAll(engraveLabel, engraveInput, sideLabel, sideChoice);
             boxType = 1;
         });
         type2Button.setOnAction(e -> {
             layout.setStyle("-fx-background-color: " + boxColor[1] + ";");
+            grid.getChildren().removeAll(engraveLabel, engraveInput, sideLabel, sideChoice);
+            grid.getChildren().addAll(engraveLabel, engraveInput, sideLabel, sideChoice);
             boxType = 2;
         });
         type3Button.setOnAction(e -> {
             layout.setStyle("-fx-background-color: " + boxColor[2] + ";");
+            grid.getChildren().removeAll(engraveLabel, engraveInput, sideLabel, sideChoice);
             boxType = 3;
         });
 
@@ -374,25 +377,49 @@ public class BoxGUI extends Application
         try{
             float num = Float.parseFloat(value);
 
-            if(num < 49 && conversion == 2.83465f){
-                input.setStyle("-fx-control-inner-background: #ff9999;");
-                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 49.");
-                return false;
+            if(boxType != 3){ // Box type 1 and 2 size limits
+                if(num < 49 && conversion == 2.83465f){
+                    input.setStyle("-fx-control-inner-background: #ff9999;");
+                    errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 49.");
+                    return false;
+                }
+                else if(num > 508 && conversion == 2.83465f){
+                    input.setStyle("-fx-control-inner-background: #ff9999;");
+                    errorMessage("ERROR", "'" + input.getId() + "'' can not be higher than 508.");
+                    return false;
+                }
+                else if(num < 1.9 && conversion == 72f){
+                    input.setStyle("-fx-control-inner-background: #ff9999;");
+                    errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 1.9.");
+                    return false;
+                }
+                else if(num > 20 && conversion == 72f){
+                    input.setStyle("-fx-control-inner-background: #ff9999;");
+                    errorMessage("ERROR", "'" + input.getId() + "'' can not be higher than 20.");
+                    return false;
+                }
             }
-            else if(num > 508 && conversion == 2.83465f){
-                input.setStyle("-fx-control-inner-background: #ff9999;");
-                errorMessage("ERROR", "'" + input.getId() + "'' can not be higher than 508.");
-                return false;
-            }
-            else if(num < 1.9 && conversion == 72f){
-                input.setStyle("-fx-control-inner-background: #ff9999;");
-                errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 1.9.");
-                return false;
-            }
-            else if(num > 20 && conversion == 72f){
-                input.setStyle("-fx-control-inner-background: #ff9999;");
-                errorMessage("ERROR", "'" + input.getId() + "'' can not be higher than 20.");
-                return false;
+            else if (boxType == 3){ // Box type 3 size limits
+                if(num < 76.1 && conversion == 2.83465f){
+                    input.setStyle("-fx-control-inner-background: #ff9999;");
+                    errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 76.1.");
+                    return false;
+                }
+                else if(num > 762 && conversion == 2.83465f){
+                    input.setStyle("-fx-control-inner-background: #ff9999;");
+                    errorMessage("ERROR", "'" + input.getId() + "'' can not be higher than 762.");
+                    return false;
+                }
+                else if(num < 2.99 && conversion == 72f){
+                    input.setStyle("-fx-control-inner-background: #ff9999;");
+                    errorMessage("ERROR", "'" + input.getId() + "'' can not be lower than 2.99.");
+                    return false;
+                }
+                else if(num > 30 && conversion == 72f){
+                    input.setStyle("-fx-control-inner-background: #ff9999;");
+                    errorMessage("ERROR", "'" + input.getId() + "'' can not be higher than 30.");
+                    return false;
+                }
             }
 
             return true;
@@ -461,24 +488,18 @@ public class BoxGUI extends Application
         System.out.println(" to " + width + "x" + height + "x" + depth);
     }
 
-    private void calculateNumTab()
-    {
-        float shortSide = Math.min(width, Math.min(height, depth));
-
-    }
-
-    private void generateSVG(float width, float height, float depth, String engraving, String fileName){
-        System.out.println("Passing " + width + "x" + height + "x" + depth);
+    public void generateSVG(float width, float height, float depth, String engraving, String fileName){
+        System.out.println("Passing " + width + "x" + height + "x" + depth + 
+                            "\n Box Type: " + boxType);
 
         if(boxType == 1 || boxType == 2){
+
             Box guiBox = new Box(boxType,width,height,depth,tabCount,engraving,"Arial",engravingSide,fileName,conversion, tightness);
             guiBox.print();
         }
         else if(boxType == 3){
-            NoteBox guiBox = new NoteBox(width, height, depth, engraving, fileName, conversion);
+            NoteBox guiBox = new NoteBox(width, height, depth, fileName, conversion);
             guiBox.print();
         }
-
-        
     }
 }

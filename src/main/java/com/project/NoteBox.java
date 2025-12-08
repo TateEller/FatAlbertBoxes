@@ -8,7 +8,7 @@ import java.util.Locale; //Change standard settings to America
 public class NoteBox{
 
     public float width = 0.0f, height = 0.0f, depth = 0.0f;     //Width and depth are the size of the note cards
-    public String engraving = "", fileName = "Untitled";
+    public String fileName = "Untitled";
     public float conversion = 2.83465f; // Conversion from mm to points
     public float tabWidth = 12.7f * conversion, tabDepth = 4.5f;
     public float strokeWidth = 1f;
@@ -24,24 +24,71 @@ public class NoteBox{
     private int pieces = 0;
 
 
-    public NoteBox(float w, float h, float d, String e, String fN, float conv){
+    public NoteBox(float w, float h, float d, String fN, float conv){
         this.width = w;
         this.height = h;
         this.depth = d;
-        this.engraving = e;
         this.fileName = fN;
         this.conversion = conv;
     }
 
     public NoteBox build(){
-        return new NoteBox(width, height, depth, fileName, engraving, conversion);
+        return new NoteBox(width, height, depth, fileName, conversion);
     }
+
+    public void setWidth(float width){
+        if(conversion == 72f)
+        {
+            if(width < 2.99f)
+                throw new IllegalArgumentException("Width must be at least 2.99 inches");
+        }
+        else if (conversion == 2.83465f)
+        {
+            if(width < 76.1f)
+                throw new IllegalArgumentException("Width must be at least 76.1 millimeters");
+        }
+        this.width = width;
+    }
+    public void setHeight(float height){
+        if(conversion == 72f)
+        {
+            if(height < 2.99f)
+                throw new IllegalArgumentException("Height must be at least 2.99 inches");
+        }
+        else if (conversion == 2.83465f)
+        {
+            if(height < 76.1f)
+                throw new IllegalArgumentException("Height must be at least 76.1 millimeters");
+        }
+        this.height = height;
+    }
+    public void setDepth(float depth){
+        if(conversion == 72f)
+        {
+            if(depth < 2.99f)
+                throw new IllegalArgumentException("Depth must be at least 2.99 inches");
+        }
+        else if (conversion == 2.83465f)
+        {
+            if(depth < 76.1f)
+                throw new IllegalArgumentException("Depth must be at least 76.1 millimeters");
+        }
+        this.depth = depth;
+    }
+
 
     public void ConvertMeasurments(float conv){
         //width = width * conv;
         //height = height * conv;
         //depth = depth * conv;
-        tabDepth = tabDepth * conv;
+        if(conv == 72f){
+            tabDepth = 0.12204724f * conv;
+            strokeWidth = 0.003937008f * conv;
+        }
+        else{
+            tabDepth = tabDepth * conv;
+            strokeWidth = 0.1f * conversion;
+        }
     }
 
     public void print(){
@@ -85,8 +132,8 @@ public class NoteBox{
         //System.out.println(svgWhole);
 
         //Choose where to save the file
-        File file = new File("exports/" + fileName + ".svg");   //Save to exports folder in project
-        //File file = new File(getDownloadsFolder(), fileName + ".svg");   //Save to user downloads folder
+        //File file = new File("exports/" + fileName + ".svg");   //Save to exports folder in project
+        File file = new File(getDownloadsFolder(), fileName + ".svg");   //Save to user downloads folder
 
         try (FileWriter writer = new FileWriter(file)) 
         {
@@ -113,7 +160,7 @@ public class NoteBox{
         return new File(home); // if no downloads folder found, return home
     }
 
-    public String AddBase(float sideX, float sideY){
+    private String AddBase(float sideX, float sideY){
         pieces++;        
 
         //Find starting position
@@ -216,7 +263,7 @@ public class NoteBox{
         return svgContent;
     }
 
-    public String AddSide(float sideX, float sideY){
+    private String AddSide(float sideX, float sideY){
         pieces++;        
 
         //Calculate tabs width
@@ -293,13 +340,13 @@ public class NoteBox{
             "<text x=\"%.1f\" y=\"%.1f\" font-size=\"10\" text-anchor=\"middle\" dominant-baseline=\"middle\">%s</text>\r\n",
             xCenter, yCenter, "");  //having ("") and the end stops it engraving on the top
         
-        positionX += sideX + 2 * tabX + 3 * padding; 
+        positionX += sideX + tabX + padding; 
         
         
         return svgContent;
     }
 
-    public String AddBack(float sideX, float sideY){
+    private String AddBack(float sideX, float sideY){
         pieces++;
 
         //Calculate tabs width
@@ -375,13 +422,13 @@ public class NoteBox{
             xCenter, yCenter, "");  //having ("") and the end stops it engraving on the top
 
         // Move start of next piece
-        positionX -= sideX + 2 * tabX + 3 * padding;
-        positionY += depth + tabY + padding; 
+        positionX -= depth + tabX + padding;
+        positionY += sideY + padding; 
 
         return svgContent;
     }
 
-    public String AddFront(float sideX, float sideY){
+    private String AddFront(float sideX, float sideY){
         pieces++;
 
         //Calculate tabs width
@@ -471,11 +518,11 @@ public class NoteBox{
         
         return sideLength / tabNum;
     }
-
+    /*
     public static void main(String[] args) {
-        NoteBox box = new NoteBox(100, 100, 100, "Hi", "NoteBox", 3.175f);
+        NoteBox box = new NoteBox(76.1f, 50, 100, "Hi", "NoteBox", 3.175f);
         box.print();
-    }
+    }    */
 
     public String AddTestSquare(float sideX, float sideY, String color){
         String svgContent = String.format("""

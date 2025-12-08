@@ -171,4 +171,32 @@ public class CardBox {
             e.printStackTrace();
         }
     }
+
+    private String AddDividers(float sideX, float sideY){
+        /*
+        StringBuilder path = new StringBuilder();
+        svgContent += String.format("""
+                <path d="M %.2f %.2f
+                        a 1 1 0 1 %f %f 0"
+                    fill="none" stroke="black" stroke-width="%.2f"/>
+                """,
+                positionX,
+                positionY,
+                100.0f,
+                500.0f,
+                strokeWidth
+            );
+        svgContent += String.format("""
+                <path d="%s" stroke-width="%f" fill="none" stroke="black"/>
+                """, path.toString(), 0.1); */
+        
+        return "";
+    }
+
+
+
+    public static void main(String[] args) {
+        CardBox box = new CardBox(100, 150, 50, "AB", "Arial", "cardbox_test", 2.83465f);
+        box.print();
+    }
 }

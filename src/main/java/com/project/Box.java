@@ -14,7 +14,7 @@ public class Box
     public float fontSize;
     public int engSides;
     public float conversion;
-    private final float MinimumSize = 5f;
+    private final float MinimumSize = 1f;
     private float strokeWidth, widthOfTabs, heightOfTabs; // Debug values
     private float tightness;
 
@@ -30,7 +30,9 @@ public class Box
 
     public Box(int boxType, float width, float height, float depth, int numTabs, String engraving, String font, int engSides, String fileName, float conversion, float tightness)
     {
-        if(width < MinimumSize || height < MinimumSize || depth < MinimumSize)
+        this.conversion = conversion;
+
+        if(width < MinimumSize || height < MinimumSize || depth < MinimumSize)  //should already be passed above min value
             throw new IllegalArgumentException("Width and Height must be at least " + MinimumSize);
         this.boxType = boxType;
         this.width = width;
@@ -42,7 +44,6 @@ public class Box
         this.engSides = engSides;
         this.font = font;
         this.fileName = fileName;
-        this.conversion = conversion;
         this.tightness = tightness;
 
         //measurements
@@ -66,32 +67,54 @@ public class Box
             positionY = 10 * conversion;
             this.spaceBetween = 35 * conversion;
         }
-        this.width = width - (2 * heightOfTabs);
-        this.depth = depth - (2 * heightOfTabs);
-        this.height = height - (2.5f * heightOfTabs);
     }
 
     // Width Setter
     public void setWidth(float width)
     {
-        if(width < MinimumSize)
-            throw new IllegalArgumentException("Width must be at least " + MinimumSize);
+        if(conversion == 72f)
+        {
+            if(width < 1.9f)
+                throw new IllegalArgumentException("Width must be at least 1.9 inches");
+        }
+        else if (conversion == 2.83465f)
+        {
+            if(width < 49f)
+                throw new IllegalArgumentException("Width must be at least 49 millimeters");
+        }
+
         this.width = width;
     }
 
     // Height Setter
     public void setHeight(float height)
     {
-        if(height < MinimumSize)
-            throw new IllegalArgumentException("Height must be at least " + MinimumSize);
+        if(conversion == 72f)
+        {
+            if(height < 1.9f)
+                throw new IllegalArgumentException("Height must be at least 1.9 inches");
+        }
+        else if (conversion == 2.83465f)
+        {
+            if(height < 49f)
+                throw new IllegalArgumentException("Height must be at least 49 millimeters");
+        }
         this.height = height;
     }
 
     // Depth Setter
     public void setDepth(float depth)
     {
-        if(depth < MinimumSize)
-            throw new IllegalArgumentException("Depth must be at least " + MinimumSize);
+        if(conversion == 72f)
+        {
+            if(depth < 1.9f)
+                throw new IllegalArgumentException("Depth must be at least 1.9 inches");
+        }
+        else if (conversion == 2.83465f)
+        {
+            if(depth < 49f)
+                throw new IllegalArgumentException("Depth must be at least 49 millimeters");
+        }
         this.depth = depth;
     }
 
@@ -152,6 +175,11 @@ public class Box
 
     public void print()
     {
+        this.width = width - (2 * heightOfTabs);
+        this.depth = depth - (2 * heightOfTabs);
+        this.height = height - (2.5f * heightOfTabs);
+
+
         System.out.println("Measurments: " + width + "x" + height + "x" + depth);
         Locale.setDefault(Locale.US);   // My standard settings are European settings, so please dont remove
         
@@ -184,10 +212,16 @@ public class Box
         String svgContent = "";
         
         // Add the base
-        if(boxType == 1) // Based box
+        if(boxType == 1){
+            System.out.println("Adding base... ");
             svgContent += addBase();
-        else if(boxType == 2) // Closed box (no base)
+        } // Based box
+            
+        else if(boxType == 2){
+            System.out.println("No base added... ");
             svgContent += addSide(true, false, true); // Add bottom side without engraving
+        } // Closed box (no base)
+
         
         // Add the top
         svgContent += addTop();
