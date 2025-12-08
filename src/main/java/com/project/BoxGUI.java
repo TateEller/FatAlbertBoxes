@@ -55,16 +55,16 @@ public class BoxGUI extends Application
         depthInput = new TextField("100");
         
         //Buttons for selecting type of box
-        type1Button = new Button("Base Box");
+        type1Button = new Button("Based Box");
         type1Button.setStyle("-fx-background-color: "+boxColor[0]+";");
         type2Button = new Button("Closed Box");
         type2Button.setStyle("-fx-background-color: "+boxColor[1]+";");
-        type3Button = new Button("Type 3 Box");
+        type3Button = new Button("Note Box");
         type3Button.setStyle("-fx-background-color: "+boxColor[2]+";");
 
         HBox topButtons = new HBox(10);
         topButtons.setPadding(new Insets(10,10,10,10));
-        topButtons.getChildren().addAll(type1Button, type2Button);
+        topButtons.getChildren().addAll(type1Button, type2Button, type3Button);
 
         //Grid for the user input of variables
         GridPane grid = new GridPane();
@@ -434,7 +434,15 @@ public class BoxGUI extends Application
     private void generateSVG(float width, float height, float depth, String engraving, String fileName){
         System.out.println("Passing " + width + "x" + height + "x" + depth);
 
-        Box guiBox = new Box(boxType,width,height,depth,tabCount,engraving,"Arial",engravingSide,fileName,conversion);
-        guiBox.print();
+        if(boxType == 1 || boxType == 2){
+            Box guiBox = new Box(boxType,width,height,depth,tabCount,engraving,"Arial",engravingSide,fileName,conversion);
+            guiBox.print();
+        }
+        else if(boxType == 3){
+            NoteBox guiBox = new NoteBox(width, height, depth, engraving, fileName, conversion);
+            guiBox.print();
+        }
+
+        
     }
 }
