@@ -259,8 +259,8 @@ public class Box
         String svgWhole = svgOpener + svgContent + svgCloser;
 
         //Choose where to save the file
-        File file = new File("exports/" + fileName + ".svg");   //Save to exports folder in project
-        //File file = new File(getDownloadsFolder(), fileName + ".svg");   //Save to user downloads folder
+        //File file = new File("exports/" + fileName + ".svg");   //Save to exports folder in project
+        File file = new File(getDownloadsFolder(), fileName + ".svg");   //Save to user downloads folder
 
         try (FileWriter writer = new FileWriter(file)) 
         {
@@ -423,7 +423,7 @@ public class Box
         float marginY = (depthBase - (nVertical*widthOfTabs*2)+ widthOfTabs) /2;
 
         // --- Top edge (inside the base) ---
-        float yTop = positionY + widthOfTabs;
+        float yTop = positionY + widthOfTabs - heightOfTabs;
         float xTop = positionX + marginX;
         for (int i = 0; i < nHorizontal; i++) {
             svgContent.append(basePrintSquares(xTop, yTop, widthOfTabs, heightOfTabs));
@@ -431,7 +431,7 @@ public class Box
         }
 
         // --- Bottom edge (inside the base) ---
-        float yBottom = positionY + depthBase - heightOfTabs - widthOfTabs;
+        float yBottom = positionY + depthBase - widthOfTabs;
         float xBottom = positionX + marginX;
         for (int i = 0; i < nHorizontal; i++) {
             svgContent.append(basePrintSquares(xBottom, yBottom, widthOfTabs, heightOfTabs));
@@ -439,7 +439,7 @@ public class Box
         }
 
         // --- Left edge (inside the base) ---
-        float xLeft = positionX + widthOfTabs; // move inside
+        float xLeft = positionX + widthOfTabs - heightOfTabs; // move inside
         float yLeft = positionY + marginY;
         for (int i = 0; i < nVertical; i++) {
             svgContent.append(basePrintSquares(xLeft, yLeft, heightOfTabs, widthOfTabs));
@@ -447,7 +447,7 @@ public class Box
         }
 
         // --- Right edge (inside the base) ---
-        float xRight = positionX + widthBase - heightOfTabs - widthOfTabs; // move left a bit inside
+        float xRight = positionX + widthBase - widthOfTabs; // move left a bit inside
         float yRight = positionY + marginY;
         for (int i = 0; i < nVertical; i++) {
             svgContent.append(basePrintSquares(xRight, yRight, heightOfTabs, widthOfTabs));
