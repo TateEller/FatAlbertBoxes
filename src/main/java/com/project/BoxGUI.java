@@ -227,13 +227,13 @@ public class BoxGUI extends Application
         tightnessChoice.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newvalue) -> {
             switch(newvalue){
                 case "Tight":
-                    tightness = 1.02f;
+                    tightness = 1.1f;
                     break;
                 case "Medium":
-                    tightness = 1.01f;
+                    tightness = 1f;
                     break;
                 case "Loose":
-                    tightness = 1.0f;
+                    tightness = 0.9f;
                     break;
             }
         });

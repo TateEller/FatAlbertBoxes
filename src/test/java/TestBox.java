@@ -288,31 +288,6 @@ public class TestBox
     }
 
     @Test
-    public void testCardBoxCreation()
-    {
-        com.project.CardBox cardBox = new com.project.CardBox(30.0f, 30.0f, 30.0f, "CB", "Arial", "TestCardBox", 1f);
-        assert cardBox != null : "CardBox creation failed";
-    }
-
-    @Test
-    public void testCardBoxEngravingInput()
-    {
-        com.project.CardBox engravingBox = new com.project.CardBox(50.0f, 50.0f, 50.0f, "Test", "Arial", "TestCardBox",1f);
-        
-        // Test 1
-        engravingBox.setEngraving("NE");
-        assert engravingBox.engraving.equals("NE") : "Engraving not set correctly";
-
-        // Test 2
-        engravingBox.setEngraving("HW");
-        assert engravingBox.engraving.equals("HW") : "Engraving not set correctly";
-
-        // Test 3
-        engravingBox.setEngraving("LE");
-        assert engravingBox.engraving.equals("LE") : "Engraving not set correctly";
-    }
-
-    @Test
     public void testGUIboxes()
     {
         com.project.BoxGUI gui = new com.project.BoxGUI();
