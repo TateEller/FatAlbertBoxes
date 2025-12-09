@@ -45,7 +45,7 @@ public class BoxMaker
         }
         else if(boxType == 3)
         {
-            CardBox test = new CardBox(width, height, depth, engraving, font, fileName, conversion);
+            NoteBox test = new NoteBox(width, height, depth, fileName, conversion);
             scanner.close();
             test.print();
         }
